@@ -18,7 +18,7 @@ FetchContent_MakeAvailable(googletest)
 # Setup JUCE
 add_subdirectory(JUCE)
 juce_add_plugin(CloudCrusher
-    COMPANY_NAME "Glossolalia Audio"
+    COMPANY_NAME "GlossolaliaAudio"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE
@@ -30,6 +30,19 @@ juce_add_plugin(CloudCrusher
     PRODUCT_NAME "CloudCrusher"
 )
 juce_generate_juce_header(CloudCrusher)
+
+# Create the plugin lib target
+add_library(CloudCrusher_lib INTERFACE)
+target_include_directories(CloudCrusher_lib INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+)
+target_link_libraries(CloudCrusher_lib INTERFACE
+    juce::juce_core
+    juce::juce_audio_processors
+    juce::juce_audio_utils
+    juce::juce_gui_basics
+    juce::juce_dsp
+)
 
 # Create the main plugin target
 target_sources(CloudCrusher PRIVATE
@@ -48,6 +61,7 @@ target_link_libraries(CloudCrusher
         juce::juce_audio_utils
         juce::juce_gui_basics
         juce::juce_dsp
+        CloudCrusher_lib
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
@@ -57,20 +71,13 @@ target_link_libraries(CloudCrusher
 # Create plugin test target
 enable_testing()
 add_executable(CloudCrusherTest
-  test/main.cpp
+    test/TestBoxMullerNoise.cpp
+    test/main.cpp
 )
 target_link_libraries(CloudCrusherTest
   PRIVATE
         GTest::gtest_main
-        juce::juce_core
-        juce::juce_audio_processors
-        juce::juce_audio_utils
-        juce::juce_gui_basics
-        juce::juce_dsp
-    PUBLIC
-        juce::juce_recommended_config_flags
-        juce::juce_recommended_lto_flags
-        juce::juce_recommended_warning_flags
+        CloudCrusher_lib
 )
 include(GoogleTest)
 gtest_discover_tests(CloudCrusherTest)
