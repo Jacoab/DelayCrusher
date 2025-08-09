@@ -27,7 +27,8 @@ public:
     /**
      * @brief Compute a gaussian noise sample using the Box-Muller transform.  This implementation
      * uses the Marsaglia polar method instead of the standard trigonometric version of the Box-Muller
-     * transform, which is more efficient and avoids the need for trigonometric functions.
+     * transform, which is more efficient and avoids the need for executing trigonometric functions in the audio
+     * processing loop.
      * 
      * @return float 
      */
