@@ -82,6 +82,10 @@ void CloudCrusherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     juce::ScopedNoDenormals noDenormals;
     for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
         buffer.clear (channel, 0, buffer.getNumSamples());
+
+    juce::dsp::AudioBlock<float> audioBlock(buffer);
+    juce::dsp::ProcessContextReplacing<float> context(audioBlock);
+    m_processorChain.process(context);
 }
 
 bool CloudCrusherAudioProcessor::hasEditor() const { return true; }

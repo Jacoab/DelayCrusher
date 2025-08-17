@@ -3,21 +3,23 @@
 #include <cmath>
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_dsp/juce_dsp.h>
 
 #include "concepts/NoiseGenType.h"
 #include "BoxMullerNoise.h"
 
-namespace glos::clcr
+namespace glos::clcr 
 {
 
 /**
  * @brief Bit crusher audio effect that reduces the sample rate and bit depth of an audio signal.
+ * This effect can be used as a JUCE DSP processor in an audio processing chain.
  * 
  * @tparam NoiseGen Provides noise samples that can be added to the processed signal.
  */
 template <typename NoiseGen>
 requires NoiseGenType<NoiseGen>
-class BitCrusher
+class BitCrusher : public juce::dsp::ProcessorBase
 {
 public:
     /**
@@ -27,9 +29,8 @@ public:
      */
     BitCrusher() :
         m_sampleRateRedux(0),
-        m_sampleRateCounter(0),
-        m_bitDepth(32),
         m_heldSample(0.0f),
+        m_bitDepth(32),
         m_noiseGenerator(NoiseGen())
     {
     }
@@ -42,10 +43,9 @@ public:
      * Initializes with a sample rate reduction of sampleRateRedux and a bit depth of bitDepth.
      */
     BitCrusher(int sampleRateRedux, int bitDepth) : 
-        m_sampleRateRedux(sampleRateRedux), 
-        m_sampleRateCounter(0),
-        m_bitDepth(bitDepth),
+        m_sampleRateRedux(sampleRateRedux),
         m_heldSample(0.0f),
+        m_bitDepth(bitDepth),
         m_noiseGenerator(NoiseGen())
     {
     }
@@ -58,10 +58,9 @@ public:
      * Initializes with a sample rate reduction of sampleRateRedux and a bit depth of bitDepth.
      */
     BitCrusher(int sampleRateRedux, int bitDepth, NoiseGen noiseGenerator) : 
-        m_sampleRateRedux(sampleRateRedux), 
-        m_sampleRateCounter(0),
-        m_bitDepth(bitDepth),
+        m_sampleRateRedux(sampleRateRedux),
         m_heldSample(0.0f),
+        m_bitDepth(bitDepth),
         m_noiseGenerator(noiseGenerator)
     {
     }
@@ -97,23 +96,47 @@ public:
         m_noiseAmount = noiseAmount;
     }
 
-    /**
-     * @brief Process a single sample by quantizing the sample to the specified bit depth, reducing the sample rate,
-     * and dithering noise to the quantized sample.
-     * 
-     * @param sample Sample to be processed.
-     * @return float 
-     */
-    float process(float sample) noexcept
+    void prepare (const juce::dsp::ProcessSpec& spec) override
     {
-        if (--m_sampleRateCounter <= 0)
+
+    }
+    
+    /**
+     * @brief 
+     * 
+     * @param context 
+     */
+    void process (const juce::dsp::ProcessContextReplacing<float>& context) override
+    {
+        auto& block = context.getOutputBlock();
+        auto numChannels = block.getNumChannels();
+        auto numSamples = block.getNumSamples();
+
+        auto noise = m_noiseGenerator.nextNSamples(static_cast<int>(numSamples));
+
+        for (std::size_t channel = 0; channel < numChannels; ++channel)
         {
-            m_sampleRateCounter = m_sampleRateRedux;
-            m_heldSample = quantize(sample);
+            auto* samples = block.getChannelPointer(channel);
+            for (std::size_t i = 0; i < numSamples; ++i)
+            {
+                // Reuse every sample that is a multiple of m_sampleRateRedux 
+                if (i % m_sampleRateRedux == 0)
+                    m_heldSample = quantize(samples[i]);
+
+                samples[i] = m_heldSample;
+            }
+            
+            auto* noiseSamples = noise.getWritePointer(channel);
+            juce::FloatVectorOperations::multiply(noiseSamples, m_noiseAmount.load(), numSamples);
+            juce::FloatVectorOperations::add(samples, noiseSamples, numSamples);
         }
 
-        auto noise = m_noiseGenerator.nextSample();
-        return m_heldSample + noise * m_noiseAmount;
+
+    }
+
+    void reset() override
+    {
+
     }
 
 private:
@@ -130,13 +153,14 @@ private:
     }
 
     std::atomic_int m_sampleRateRedux; /**< Amount the sample rate will be reduced by */
-    int m_sampleRateCounter; /**< The number of iterations the current sample should be held and re-used */
-    float m_heldSample; /**< Current sample that is held and re-used for m_sampleRateCounter iterations */
+    float m_heldSample; /**< Current sample that is held and re-used for m_sampleRateRedux iterations */
 
     std::atomic_int m_bitDepth; /**< Number of bits used to represent each sample after processing */
     std::atomic<float> m_noiseAmount; /**< Percentage of signal made up by generated noise */
 
     NoiseGen m_noiseGenerator; /**< Noise generator */
 };
+
+using GaussianBitCrusher = BitCrusher<BoxMullerNoise>;
 
 } // namespace glos::clcr

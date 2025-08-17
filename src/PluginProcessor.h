@@ -2,6 +2,9 @@
 
 #include <JuceHeader.h>
 
+#include "BoxMullerNoise.h"
+#include "BitCrusher.h"
+
 //==============================================================================
 class CloudCrusherAudioProcessor  : public juce::AudioProcessor
 {
@@ -43,6 +46,11 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    //==============================================================================
+    // Audio effects
+    enum {
+        BitCrusherIndex
+    };
+    juce::dsp::ProcessorChain<glos::clcr::GaussianBitCrusher> m_processorChain;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CloudCrusherAudioProcessor)
 };

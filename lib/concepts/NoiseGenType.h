@@ -2,6 +2,8 @@
 
 #include <concepts>
 
+#include <juce_core/juce_core.h>
+
 namespace glos::clcr
 {
 
@@ -14,6 +16,7 @@ template <typename T>
 concept NoiseGenType = requires(T noiseGen)
 {
     { noiseGen.nextSample() } -> std::convertible_to<float>;
+    //{ noiseGen.nextNSamples(int n)} -> std::convertible_to<juce::AudioBuffer<float>&>;
 };
 
 } // gloss::clcr

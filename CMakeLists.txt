@@ -71,7 +71,7 @@ target_link_libraries(CloudCrusher
 # Create plugin test target
 enable_testing()
 add_executable(CloudCrusherTest
-    test/utils/TestNoise.cpp
+    test/utils/ConstNoise.cpp
     test/TestBoxMullerNoise.cpp
     test/TestBitCrusher.cpp
     test/main.cpp
