@@ -16,7 +16,7 @@ float ConstNoise::nextSample() noexcept
     return m_noiseSample;
 } 
 
-juce::AudioBuffer<float>& ConstNoise::nextNSamples(int n) noexcept
+juce::AudioBuffer<float> ConstNoise::nextNSamples(int n) noexcept
 {
     m_noiseBuffer.setSize(1, n);
     auto* writePointer = m_noiseBuffer.getWritePointer(0);

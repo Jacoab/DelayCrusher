@@ -31,17 +31,26 @@ juce_add_plugin(CloudCrusher
 )
 juce_generate_juce_header(CloudCrusher)
 
-# Create the plugin lib target
-add_library(CloudCrusher_lib INTERFACE)
-target_include_directories(CloudCrusher_lib INTERFACE
+add_library(CloudCrusher_lib STATIC
+    lib/BoxMullerNoise.cpp
+)
+
+target_include_directories(CloudCrusher_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
 )
-target_link_libraries(CloudCrusher_lib INTERFACE
-    juce::juce_core
-    juce::juce_audio_processors
-    juce::juce_audio_utils
-    juce::juce_gui_basics
-    juce::juce_dsp
+
+target_link_libraries(CloudCrusher_lib
+    PUBLIC
+        juce::juce_core
+        juce::juce_audio_processors
+        juce::juce_audio_utils
+        juce::juce_gui_basics
+        juce::juce_dsp
+)
+
+# Make template headers available to all targets
+target_include_directories(CloudCrusher PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib
 )
 
 # Create the main plugin target
@@ -76,6 +85,13 @@ add_executable(CloudCrusherTest
     test/TestBitCrusher.cpp
     test/main.cpp
 )
+target_include_directories(CloudCrusherTest PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+)
+target_include_directories(CloudCrusherTest PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+)
+
 target_link_libraries(CloudCrusherTest
   PRIVATE
         GTest::gtest_main

@@ -15,7 +15,7 @@ public:
     ConstNoise(float noiseSample);
 
     float nextSample() noexcept;
-    juce::AudioBuffer<float>& nextNSamples(int n) noexcept;
+    juce::AudioBuffer<float> nextNSamples(int n) noexcept;
 private:
     float m_noiseSample;
     juce::AudioBuffer<float> m_noiseBuffer; // Buffer to hold the noise samples
