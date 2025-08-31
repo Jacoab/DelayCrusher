@@ -1,10 +1,18 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-CloudCrusherAudioProcessorEditor::CloudCrusherAudioProcessorEditor (CloudCrusherAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+CloudCrusherAudioProcessorEditor::CloudCrusherAudioProcessorEditor (CloudCrusherAudioProcessor& p) : 
+    AudioProcessorEditor (&p), 
+    m_audioProcessor (p),
+    m_sampleRateReduxDial(glos::clcr::SAMPLE_RATE_REDUX_DIAL_TEXT, m_audioProcessor.getAPVTS(), glos::clcr::SAMPLE_RATE_REDUX_DIAL_ID),
+    m_bitDepthDial(glos::clcr::BIT_DEPTH_DIAL_TEXT, m_audioProcessor.getAPVTS(), glos::clcr::BIT_DEPTH_DIAL_ID),
+    m_noiseAmountDial(glos::clcr::NOISE_AMOUNT_DIAL_TEXT, m_audioProcessor.getAPVTS(), glos::clcr::NOISE_AMOUNT_DIAL_ID)
 {
     setSize (400, 300);
+
+    addAndMakeVisible(m_sampleRateReduxDial);
+    addAndMakeVisible(m_bitDepthDial);
+    addAndMakeVisible(m_noiseAmountDial);
 }
 
 CloudCrusherAudioProcessorEditor::~CloudCrusherAudioProcessorEditor() {}
@@ -14,10 +22,17 @@ void CloudCrusherAudioProcessorEditor::paint (juce::Graphics& g)
     g.fillAll (juce::Colours::black);
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
-    g.drawFittedText ("CloudCrusher", getLocalBounds(), juce::Justification::centred, 1);
+
+    auto topArea = getLocalBounds();
+    g.drawFittedText ("Cloud Crusher", topArea, juce::Justification::centredTop, 1);
 }
 
 void CloudCrusherAudioProcessorEditor::resized()
 {
-    // Layout your controls here
+    auto area = getLocalBounds().reduced(20);
+    auto knobWidth = area.getWidth() / 3;
+
+    m_sampleRateReduxDial.setBounds(area.removeFromLeft(knobWidth));
+    m_bitDepthDial.setBounds(area.removeFromLeft(knobWidth));
+    m_noiseAmountDial.setBounds(area);
 }

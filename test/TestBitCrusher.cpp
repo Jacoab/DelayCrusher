@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <juce_dsp/juce_dsp.h>
+#include <juce_core/juce_core.h>
 
 #include "BitCrusher.h"
 #include "utils/ConstNoise.h"
@@ -23,10 +24,14 @@ TEST(TestBitCrusher, ProcessSample)
     juce::dsp::AudioBlock<float> audioBlock(audioBuffer);
     juce::dsp::ProcessContextReplacing<float> context(audioBlock);
 
-    auto sampleRateRedux = 2;
-    auto bitDepth = 8;
-    glos::clcr::BitCrusher<ConstNoise> bitCrusher(sampleRateRedux, bitDepth, testNoise);
-    bitCrusher.setNoiseAmount(0.5f);
+    std::atomic<float> sampleRateRedux = 2;
+    std::atomic<float> bitDepth = 8;
+    std::atomic<float> noiseAmount = 0.5f;
+    auto* sampleRateReduxPtr = &sampleRateRedux;
+    auto* bitDepthPtr = &bitDepth;
+    auto* noiseAmountPtr = &noiseAmount;
+    glos::clcr::BitCrusher<ConstNoise> bitCrusher{};
+    bitCrusher.init(sampleRateReduxPtr, bitDepthPtr, noiseAmountPtr, testNoise);
 
     bitCrusher.process(context);
 

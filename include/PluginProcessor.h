@@ -1,6 +1,10 @@
 #pragma once
 
-#include <JuceHeader.h>
+#include <cstdint>
+
+#include <juce_core/juce_core.h>
+#include <juce_audio_processors/juce_audio_processors.h>
+
 
 #include "BoxMullerNoise.h"
 #include "BitCrusher.h"
@@ -45,12 +49,18 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    juce::AudioProcessorValueTreeState& getAPVTS();
+    const glos::clcr::GaussianBitCrusher& getBitCrusher();
+    
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+
 private:
     // Audio effects
     enum {
         BitCrusherIndex
     };
     juce::dsp::ProcessorChain<glos::clcr::GaussianBitCrusher> m_processorChain;
+    juce::AudioProcessorValueTreeState m_apvts;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CloudCrusherAudioProcessor)
 };

@@ -2,23 +2,24 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-CloudCrusherAudioProcessor::CloudCrusherAudioProcessor()
+CloudCrusherAudioProcessor::CloudCrusherAudioProcessor() :
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
+    AudioProcessor (BusesProperties()
 #if ! JucePlugin_IsMidiEffect
 #if ! JucePlugin_IsSynth
                        .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
 #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-                       )
+                       ),
 #endif
+    m_apvts(*this, nullptr, "UI Parameters", createParameterLayout())
 {
 }
 
 CloudCrusherAudioProcessor::~CloudCrusherAudioProcessor() {}
 
-const juce::String CloudCrusherAudioProcessor::getName() const { return JucePlugin_Name; }
+const juce::String CloudCrusherAudioProcessor::getName() const { return "Cloud Crusher"; }
 
 bool CloudCrusherAudioProcessor::acceptsMidi() const
 {
@@ -55,7 +56,23 @@ void CloudCrusherAudioProcessor::setCurrentProgram (int) {}
 const juce::String CloudCrusherAudioProcessor::getProgramName (int) { return {}; }
 void CloudCrusherAudioProcessor::changeProgramName (int, const juce::String&) {}
 
-void CloudCrusherAudioProcessor::prepareToPlay (double, int) {}
+void CloudCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) 
+{
+    juce::dsp::ProcessSpec spec (
+        sampleRate, 
+        static_cast<uint32_t>(samplesPerBlock),
+        static_cast<uint32_t>(getTotalNumOutputChannels())
+    );
+
+    auto& bitCrusher = m_processorChain.get<BitCrusherIndex>();
+
+    bitCrusher.setSampleRateRedux(m_apvts.getRawParameterValue(glos::clcr::SAMPLE_RATE_REDUX_DIAL_ID));
+    bitCrusher.setBitDepth(m_apvts.getRawParameterValue(glos::clcr::BIT_DEPTH_DIAL_ID));
+    bitCrusher.setNoiseAmount(m_apvts.getRawParameterValue(glos::clcr::NOISE_AMOUNT_DIAL_ID));
+
+    m_processorChain.prepare(spec);
+}
+
 void CloudCrusherAudioProcessor::releaseResources() {}
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -65,11 +82,12 @@ bool CloudCrusherAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
     juce::ignoreUnused (layouts);
     return true;
 #else
-    // Only allow stereo in/out
-    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+    // Allow mono and stereo output
+    auto mainOut = layouts.getMainOutputChannelSet();
+    if (mainOut != juce::AudioChannelSet::mono() && mainOut != juce::AudioChannelSet::stereo())
         return false;
    #if ! JucePlugin_IsSynth
-    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
+    if (mainOut != layouts.getMainInputChannelSet())
         return false;
    #endif
     return true;
@@ -80,6 +98,10 @@ bool CloudCrusherAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 void CloudCrusherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
+
+    if (buffer.getNumChannels() == 0 || buffer.getNumSamples() == 0)
+        return; // Nothing to process, avoid assertions
+
     for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
         buffer.clear (channel, 0, buffer.getNumSamples());
 
@@ -109,4 +131,46 @@ void CloudCrusherAudioProcessor::setStateInformation (const void* data, int size
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new CloudCrusherAudioProcessor();
+}
+
+juce::AudioProcessorValueTreeState& CloudCrusherAudioProcessor::getAPVTS()
+{
+    return m_apvts;
+}
+
+const glos::clcr::GaussianBitCrusher& CloudCrusherAudioProcessor::getBitCrusher()
+{
+    return m_processorChain.get<BitCrusherIndex>();
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+    auto bitDepthParam = std::make_unique<juce::AudioParameterFloat> (
+        glos::clcr::BIT_DEPTH_DIAL_ID,
+        glos::clcr::BIT_DEPTH_DIAL_TEXT,
+        juce::NormalisableRange<float>(1.0f, 32.0f, 1.0f),
+        32.0f
+    );
+
+    auto sampleRateReduxParam = std::make_unique<juce::AudioParameterFloat> (
+        glos::clcr::SAMPLE_RATE_REDUX_DIAL_ID,
+        glos::clcr::SAMPLE_RATE_REDUX_DIAL_TEXT,
+        juce::NormalisableRange<float>(1.0f, 16.0f, 1.0f),
+        1.0f
+    );
+
+    auto noiseAmountParam = std::make_unique<juce::AudioParameterFloat> (
+        glos::clcr::NOISE_AMOUNT_DIAL_ID,
+        glos::clcr::NOISE_AMOUNT_DIAL_TEXT,
+        juce::NormalisableRange<float>(1.0f, 100.0f, 1.0f),
+        0.0f
+    );
+
+    layout.add(std::move(bitDepthParam));
+    layout.add(std::move(sampleRateReduxParam));
+    layout.add(std::move(noiseAmountParam));
+
+    return layout;
 }

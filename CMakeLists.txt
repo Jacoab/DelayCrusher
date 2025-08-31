@@ -4,6 +4,13 @@ project(CloudCrusher VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
+set(CloudCrusher_Sources
+    src/BoxMullerNoise.cpp
+    src/PluginProcessor.cpp
+    src/PluginEditor.cpp
+    src/components/Dial.cpp
+)
 
 # Add googletest as a dependency
 include(FetchContent)
@@ -29,34 +36,16 @@ juce_add_plugin(CloudCrusher
     FORMATS VST3
     PRODUCT_NAME "CloudCrusher"
 )
-juce_generate_juce_header(CloudCrusher)
-
-add_library(CloudCrusher_lib STATIC
-    lib/BoxMullerNoise.cpp
-)
-
-target_include_directories(CloudCrusher_lib PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
-)
-
-target_link_libraries(CloudCrusher_lib
-    PUBLIC
-        juce::juce_core
-        juce::juce_audio_processors
-        juce::juce_audio_utils
-        juce::juce_gui_basics
-        juce::juce_dsp
-)
 
 # Make template headers available to all targets
 target_include_directories(CloudCrusher PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/components
 )
 
 # Create the main plugin target
 target_sources(CloudCrusher PRIVATE
-    src/PluginProcessor.cpp
-    src/PluginEditor.cpp
+    ${CloudCrusher_Sources}
 )
 target_compile_definitions(CloudCrusher PUBLIC
     JUCE_WEB_BROWSER=0
@@ -70,7 +59,6 @@ target_link_libraries(CloudCrusher
         juce::juce_audio_utils
         juce::juce_gui_basics
         juce::juce_dsp
-        CloudCrusher_lib
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
@@ -80,22 +68,25 @@ target_link_libraries(CloudCrusher
 # Create plugin test target
 enable_testing()
 add_executable(CloudCrusherTest
+    ${CloudCrusher_Sources}
     test/utils/ConstNoise.cpp
     test/TestBoxMullerNoise.cpp
     test/TestBitCrusher.cpp
     test/main.cpp
 )
 target_include_directories(CloudCrusherTest PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
-)
-target_include_directories(CloudCrusherTest PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/components
 )
 
 target_link_libraries(CloudCrusherTest
-  PRIVATE
+    PRIVATE
         GTest::gtest_main
-        CloudCrusher_lib
+        juce::juce_audio_processors
+    PUBLIC
+        juce::juce_recommended_config_flags
+        juce::juce_recommended_lto_flags
+        juce::juce_recommended_warning_flags
 )
 include(GoogleTest)
 gtest_discover_tests(CloudCrusherTest)
