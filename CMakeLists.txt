@@ -72,6 +72,7 @@ add_executable(CloudCrusherTest
     test/utils/ConstNoise.cpp
     test/TestBoxMullerNoise.cpp
     test/TestBitCrusher.cpp
+    test/TestPluginProcessor.cpp
     test/main.cpp
 )
 target_include_directories(CloudCrusherTest PUBLIC
