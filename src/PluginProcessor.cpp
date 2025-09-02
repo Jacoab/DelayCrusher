@@ -66,6 +66,8 @@ void CloudCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 
     auto& bitCrusher = m_processorChain.get<BitCrusherIndex>();
 
+    bitCrusher.init(getTotalNumOutputChannels(), static_cast<int>(sampleRate));
+
     bitCrusher.setSampleRateRedux(m_apvts.getRawParameterValue(glos::clcr::SAMPLE_RATE_REDUX_DIAL_ID));
     bitCrusher.setBitDepth(m_apvts.getRawParameterValue(glos::clcr::BIT_DEPTH_DIAL_ID));
     bitCrusher.setNoiseAmount(m_apvts.getRawParameterValue(glos::clcr::NOISE_AMOUNT_DIAL_ID));
@@ -100,10 +102,16 @@ void CloudCrusherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     juce::ScopedNoDenormals noDenormals;
 
     if (buffer.getNumChannels() == 0 || buffer.getNumSamples() == 0)
-        return; // Nothing to process, avoid assertions
+        return;
 
-    for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
-        buffer.clear (channel, 0, buffer.getNumSamples());
+    bool hasInput = false;
+    for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
+        for (int i = 0; i < buffer.getNumSamples(); ++i)
+            if (buffer.getSample(ch, i) != 0.0f)
+                hasInput = true;
+
+    // Optional: log or breakpoint here
+    // DBG("Buffer has input: " << hasInput);
 
     juce::dsp::AudioBlock<float> audioBlock(buffer);
     juce::dsp::ProcessContextReplacing<float> context(audioBlock);
@@ -164,7 +172,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::
     auto noiseAmountParam = std::make_unique<juce::AudioParameterFloat> (
         glos::clcr::NOISE_AMOUNT_DIAL_ID,
         glos::clcr::NOISE_AMOUNT_DIAL_TEXT,
-        juce::NormalisableRange<float>(1.0f, 100.0f, 1.0f),
+        juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f),
         0.0f
     );
 

@@ -53,6 +53,11 @@ public:
         m_noiseGenerator = noiseGenerator;
     }
 
+    void init(int numChannels, int sampleRate)
+    {
+        m_noiseGenerator = NoiseGen(numChannels, sampleRate);
+    }
+
     /**
      * @brief Set the sample rate reduction of the bit crusher.
      * 
@@ -130,28 +135,25 @@ public:
         auto& block = context.getOutputBlock();
         auto numChannels = block.getNumChannels();
         auto numSamples = block.getNumSamples();
-
         auto noise = m_noiseGenerator.nextNSamples(static_cast<int>(numSamples));
 
+        auto redux = static_cast<int>(m_sampleRateRedux->load());
         for (std::size_t channel = 0; channel < numChannels; ++channel)
         {
             auto* samples = block.getChannelPointer(channel);
+            auto* noiseSamples = noise.getWritePointer(channel);
+
             for (int i = 0; i < numSamples; ++i)
             {
-                // Reuse every sample that is a multiple of m_sampleRateRedux 
-                auto redux = static_cast<int>(m_sampleRateRedux->load());
                 if (i % redux == 0)
                     m_heldSample = quantize(samples[i]);
 
                 samples[i] = m_heldSample;
             }
-            
-            auto* noiseSamples = noise.getWritePointer(0);
+
             juce::FloatVectorOperations::multiply(noiseSamples, m_noiseAmount->load(), numSamples);
             juce::FloatVectorOperations::add(samples, noiseSamples, numSamples);
         }
-
-
     }
 
     void reset() override

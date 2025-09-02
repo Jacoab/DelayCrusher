@@ -56,7 +56,8 @@ TEST(TestPluginProcessor, ProcessBlockUsesUpdatedParameters)
 
     // Fill buffer with a known value
     for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
-        buffer.applyGain(ch, 0, buffer.getNumSamples(), 0.2f);
+        for (int i = 0; i < buffer.getNumSamples(); ++i)
+            buffer.setSample(ch, i, 0.2f);
 
     processor.processBlock(buffer, midi);
 
