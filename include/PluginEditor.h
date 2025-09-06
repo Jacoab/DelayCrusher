@@ -7,7 +7,9 @@
 #include "PluginProcessor.h"
 #include "BitCrusher.h"
 
-//==============================================================================
+namespace glos::clcr
+{
+
 class CloudCrusherAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
@@ -19,9 +21,11 @@ public:
 
 private:
     CloudCrusherAudioProcessor& m_audioProcessor;
-    glos::clcr::Dial m_sampleRateReduxDial;
-    glos::clcr::Dial m_bitDepthDial;
-    glos::clcr::Dial m_noiseAmountDial;
+    Dial m_sampleRateReduxDial;
+    Dial m_bitDepthDial;
+    Dial m_noiseAmountDial;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CloudCrusherAudioProcessorEditor)
 };
+
+}

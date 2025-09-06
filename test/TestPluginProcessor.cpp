@@ -7,7 +7,7 @@
 TEST(TestPluginProcessor, BitCrusherParameterSync)
 {
     juce::ScopedJuceInitialiser_GUI juceInit;
-    CloudCrusherAudioProcessor processor{};
+    glos::clcr::CloudCrusherAudioProcessor processor{};
     auto& apvts = processor.getAPVTS();
 
     processor.prepareToPlay(44100.0, 512);
@@ -38,7 +38,7 @@ TEST(TestPluginProcessor, BitCrusherParameterSync)
 TEST(TestPluginProcessor, ProcessBlockUsesUpdatedParameters)
 {
     juce::ScopedJuceInitialiser_GUI juceInit;
-    CloudCrusherAudioProcessor processor{};
+    glos::clcr::CloudCrusherAudioProcessor processor{};
     processor.prepareToPlay(44100.0, 512);
 
     auto& apvts = processor.getAPVTS();

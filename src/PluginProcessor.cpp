@@ -1,7 +1,9 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-//==============================================================================
+namespace glos::clcr
+{
+
 CloudCrusherAudioProcessor::CloudCrusherAudioProcessor() :
 #ifndef JucePlugin_PreferredChannelConfigurations
     AudioProcessor (BusesProperties()
@@ -68,9 +70,9 @@ void CloudCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 
     bitCrusher.init(getTotalNumOutputChannels(), static_cast<int>(sampleRate));
 
-    bitCrusher.setSampleRateRedux(m_apvts.getRawParameterValue(glos::clcr::SAMPLE_RATE_REDUX_DIAL_ID));
-    bitCrusher.setBitDepth(m_apvts.getRawParameterValue(glos::clcr::BIT_DEPTH_DIAL_ID));
-    bitCrusher.setNoiseAmount(m_apvts.getRawParameterValue(glos::clcr::NOISE_AMOUNT_DIAL_ID));
+    bitCrusher.setSampleRateRedux(m_apvts.getRawParameterValue(SAMPLE_RATE_REDUX_DIAL_ID));
+    bitCrusher.setBitDepth(m_apvts.getRawParameterValue(BIT_DEPTH_DIAL_ID));
+    bitCrusher.setNoiseAmount(m_apvts.getRawParameterValue(NOISE_AMOUNT_DIAL_ID));
 
     m_processorChain.prepare(spec);
 }
@@ -135,18 +137,12 @@ void CloudCrusherAudioProcessor::setStateInformation (const void* data, int size
     // You should use this method to restore parameters from this memory block.
 }
 
-// This creates new instances of the plugin
-juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
-{
-    return new CloudCrusherAudioProcessor();
-}
-
 juce::AudioProcessorValueTreeState& CloudCrusherAudioProcessor::getAPVTS()
 {
     return m_apvts;
 }
 
-const glos::clcr::GaussianBitCrusher& CloudCrusherAudioProcessor::getBitCrusher()
+const GaussianBitCrusher& CloudCrusherAudioProcessor::getBitCrusher()
 {
     return m_processorChain.get<BitCrusherIndex>();
 }
@@ -155,25 +151,37 @@ juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
+    auto bitDepthMin = 1.0f;
+    auto bitDepthMax = 16.0f;
+    auto bitDepthStep = 1.0f;
+    auto bitDepthDefault = bitDepthMax;
     auto bitDepthParam = std::make_unique<juce::AudioParameterFloat> (
-        glos::clcr::BIT_DEPTH_DIAL_ID,
-        glos::clcr::BIT_DEPTH_DIAL_TEXT,
-        juce::NormalisableRange<float>(1.0f, 32.0f, 1.0f),
-        32.0f
+        BIT_DEPTH_DIAL_ID,
+        BIT_DEPTH_DIAL_TEXT,
+        juce::NormalisableRange<float>(bitDepthMin, bitDepthMax, bitDepthStep),
+        bitDepthDefault
     );
 
+    auto sampleRateReduxMin = 1.0f;
+    auto sampleRateReduxMax = 16.0f;
+    auto sampleRateReduxStep = 1.0f;
+    auto sampleRateReduxDefault = sampleRateReduxMin;
     auto sampleRateReduxParam = std::make_unique<juce::AudioParameterFloat> (
-        glos::clcr::SAMPLE_RATE_REDUX_DIAL_ID,
-        glos::clcr::SAMPLE_RATE_REDUX_DIAL_TEXT,
-        juce::NormalisableRange<float>(1.0f, 16.0f, 1.0f),
-        1.0f
+        SAMPLE_RATE_REDUX_DIAL_ID,
+        SAMPLE_RATE_REDUX_DIAL_TEXT,
+        juce::NormalisableRange<float>(sampleRateReduxMin, sampleRateReduxMax, sampleRateReduxStep),
+        sampleRateReduxDefault
     );
 
+    auto noiseAmountMin = 0.0f;
+    auto noiseAmountMax = 1.0f;
+    auto noiseAmountStep = 0.01f;
+    auto noiseAmountDefault = noiseAmountMin;
     auto noiseAmountParam = std::make_unique<juce::AudioParameterFloat> (
-        glos::clcr::NOISE_AMOUNT_DIAL_ID,
-        glos::clcr::NOISE_AMOUNT_DIAL_TEXT,
-        juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f),
-        0.0f
+        NOISE_AMOUNT_DIAL_ID,
+        NOISE_AMOUNT_DIAL_TEXT,
+        juce::NormalisableRange<float>(noiseAmountMin, noiseAmountMax, noiseAmountStep),
+        noiseAmountDefault
     );
 
     layout.add(std::move(bitDepthParam));
@@ -181,4 +189,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::
     layout.add(std::move(noiseAmountParam));
 
     return layout;
+}
+
+}
+
+// This creates new instances of the plugin
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+{
+    return new glos::clcr::CloudCrusherAudioProcessor();
 }

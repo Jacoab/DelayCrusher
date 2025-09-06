@@ -1,12 +1,14 @@
 #include "PluginEditor.h"
 
-//==============================================================================
+namespace glos::clcr
+{
+
 CloudCrusherAudioProcessorEditor::CloudCrusherAudioProcessorEditor (CloudCrusherAudioProcessor& p) : 
     AudioProcessorEditor (&p), 
     m_audioProcessor (p),
-    m_sampleRateReduxDial(glos::clcr::SAMPLE_RATE_REDUX_DIAL_TEXT, m_audioProcessor.getAPVTS(), glos::clcr::SAMPLE_RATE_REDUX_DIAL_ID),
-    m_bitDepthDial(glos::clcr::BIT_DEPTH_DIAL_TEXT, m_audioProcessor.getAPVTS(), glos::clcr::BIT_DEPTH_DIAL_ID),
-    m_noiseAmountDial(glos::clcr::NOISE_AMOUNT_DIAL_TEXT, m_audioProcessor.getAPVTS(), glos::clcr::NOISE_AMOUNT_DIAL_ID)
+    m_sampleRateReduxDial(SAMPLE_RATE_REDUX_DIAL_TEXT, m_audioProcessor.getAPVTS(), SAMPLE_RATE_REDUX_DIAL_ID),
+    m_bitDepthDial(BIT_DEPTH_DIAL_TEXT, m_audioProcessor.getAPVTS(), BIT_DEPTH_DIAL_ID),
+    m_noiseAmountDial(NOISE_AMOUNT_DIAL_TEXT, m_audioProcessor.getAPVTS(), NOISE_AMOUNT_DIAL_ID)
 {
     setSize (400, 300);
 
@@ -35,4 +37,6 @@ void CloudCrusherAudioProcessorEditor::resized()
     m_sampleRateReduxDial.setBounds(area.removeFromLeft(knobWidth));
     m_bitDepthDial.setBounds(area.removeFromLeft(knobWidth));
     m_noiseAmountDial.setBounds(area);
+}
+
 }

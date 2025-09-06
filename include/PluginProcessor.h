@@ -9,7 +9,9 @@
 #include "BoxMullerNoise.h"
 #include "BitCrusher.h"
 
-//==============================================================================
+namespace glos::clcr
+{
+
 class CloudCrusherAudioProcessor  : public juce::AudioProcessor
 {
 public:
@@ -59,8 +61,10 @@ private:
     enum {
         BitCrusherIndex
     };
-    juce::dsp::ProcessorChain<glos::clcr::GaussianBitCrusher> m_processorChain;
+    juce::dsp::ProcessorChain<GaussianBitCrusher> m_processorChain;
     juce::AudioProcessorValueTreeState m_apvts;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CloudCrusherAudioProcessor)
 };
+
+}
