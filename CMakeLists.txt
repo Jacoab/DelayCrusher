@@ -9,6 +9,7 @@ set(CloudCrusher_Sources
     src/BoxMullerNoise.cpp
     src/PluginProcessor.cpp
     src/PluginEditor.cpp
+    src/Delay.cpp
     src/components/Dial.cpp
 )
 
@@ -73,6 +74,7 @@ add_executable(CloudCrusherTest
     test/TestBoxMullerNoise.cpp
     test/TestBitCrusher.cpp
     test/TestPluginProcessor.cpp
+    test/TestDelay.cpp
     test/main.cpp
 )
 target_include_directories(CloudCrusherTest PUBLIC
@@ -84,6 +86,7 @@ target_link_libraries(CloudCrusherTest
     PRIVATE
         GTest::gtest_main
         juce::juce_audio_processors
+        juce::juce_dsp
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
