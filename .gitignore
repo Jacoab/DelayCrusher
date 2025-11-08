@@ -1,2 +1,4 @@
 JUCE/*
 build/*
+.vscode/*
+.DS_Store
