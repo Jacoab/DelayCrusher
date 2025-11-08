@@ -50,7 +50,11 @@ void Delay::reset()
 
 int Delay::getDelayTimeInSamples() const
 {
-    return static_cast<int>(getDelayTime() * m_sampleRate);
+    // Delay time stored as milliseconds; convert to seconds first.
+    // Previously: return static_cast<int>(getDelayTime() * m_sampleRate);
+    // That multiplied milliseconds by sample rate giving ~1000x too large a value.
+    double delaySeconds = static_cast<double>(getDelayTime()) / 1000.0;
+    return static_cast<int>(std::round(delaySeconds * m_sampleRate));
 }
 
 }

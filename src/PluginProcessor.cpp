@@ -74,6 +74,9 @@ void CloudCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
     bitCrusher.setBitDepth(m_apvts.getRawParameterValue(BIT_DEPTH_DIAL_ID));
     bitCrusher.setNoiseAmount(m_apvts.getRawParameterValue(NOISE_AMOUNT_DIAL_ID));
 
+    auto& delay = m_processorChain.get<DelayIndex>();
+    delay.setDelayTime(m_apvts.getRawParameterValue(DELAY_TIME_DIAL_ID));
+
     m_processorChain.prepare(spec);
 }
 
@@ -147,6 +150,11 @@ const GaussianBitCrusher& CloudCrusherAudioProcessor::getBitCrusher()
     return m_processorChain.get<BitCrusherIndex>();
 }
 
+const Delay& CloudCrusherAudioProcessor::getDelay()
+{
+    return m_processorChain.get<DelayIndex>();
+}
+
 juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::createParameterLayout()
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
@@ -184,9 +192,21 @@ juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::
         noiseAmountDefault
     );
 
+    auto delayTimeMin = 0.0f;
+    auto delayTimeMax = 2000.0f; // in milliseconds
+    auto delayTimeStep = 1.0f;
+    auto delayTimeDefault = 500.0f; // default to 500 ms
+    auto delayTimeParam = std::make_unique<juce::AudioParameterFloat> (
+        DELAY_TIME_DIAL_ID,
+        DELAY_TIME_DIAL_TEXT,
+        juce::NormalisableRange<float>(delayTimeMin, delayTimeMax, delayTimeStep),
+        delayTimeDefault
+    );
+
     layout.add(std::move(bitDepthParam));
     layout.add(std::move(sampleRateReduxParam));
     layout.add(std::move(noiseAmountParam));
+    layout.add(std::move(delayTimeParam));
 
     return layout;
 }

@@ -6,6 +6,7 @@
 #include "components/Dial.h"
 #include "PluginProcessor.h"
 #include "BitCrusher.h"
+#include "Delay.h"
 
 namespace glos::clcr
 {
@@ -24,6 +25,8 @@ private:
     Dial m_sampleRateReduxDial;
     Dial m_bitDepthDial;
     Dial m_noiseAmountDial;
+
+    Dial m_delayTimeDial;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CloudCrusherAudioProcessorEditor)
 };

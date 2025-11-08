@@ -8,6 +8,7 @@
 
 #include "BoxMullerNoise.h"
 #include "BitCrusher.h"
+#include "Delay.h"
 
 namespace glos::clcr
 {
@@ -53,15 +54,17 @@ public:
 
     juce::AudioProcessorValueTreeState& getAPVTS();
     const glos::clcr::GaussianBitCrusher& getBitCrusher();
+    const glos::clcr::Delay& getDelay();
     
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
 private:
     // Audio effects
     enum {
-        BitCrusherIndex
+        BitCrusherIndex,
+        DelayIndex
     };
-    juce::dsp::ProcessorChain<GaussianBitCrusher> m_processorChain;
+    juce::dsp::ProcessorChain<GaussianBitCrusher, Delay> m_processorChain;
     juce::AudioProcessorValueTreeState m_apvts;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CloudCrusherAudioProcessor)
