@@ -141,11 +141,11 @@ public:
         for (std::size_t channel = 0; channel < numChannels; ++channel)
         {
             auto* samples = block.getChannelPointer(channel);
-            auto* noiseSamples = noise.getWritePointer(channel);
+            auto* noiseSamples = noise.getWritePointer(static_cast<int>(channel));
 
-            for (int i = 0; i < numSamples; ++i)
+            for (std::size_t i = 0; i < numSamples; ++i)
             {
-                if (i % redux == 0)
+                if (static_cast<int>(i) % redux == 0)
                     m_heldSample = quantize(samples[i]);
 
                 samples[i] = m_heldSample;

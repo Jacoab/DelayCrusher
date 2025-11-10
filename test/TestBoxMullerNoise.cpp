@@ -17,7 +17,7 @@ TEST(TestBoxMullerNoise, KolmogorovSmirnovTest)
     std::sort(channelData, channelData + numSamples);
 
     auto dMax = 0.0f;
-    for (std::size_t i = 0; i < numSamples; ++i)
+    for (int i = 0; i < numSamples; ++i)
     {
         auto cdf = 0.5f * std::erfc(-channelData[i] * static_cast<float>(M_SQRT1_2)); // CDF for standard normal distribution
         auto expectedCDF = static_cast<float>(i + 1) / numSamples; // Empirical CDF for sorted samples

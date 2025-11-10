@@ -3,18 +3,10 @@
 namespace glos::clcr
 {
 
-BoxMullerNoise::BoxMullerNoise() :
-    m_random(),
-    m_usePrecomputedSample(false),
-    m_precomputedSample(0.0f),
-    m_samples(1, 44100)
-{
-}
-
 BoxMullerNoise::BoxMullerNoise(int numChannels, int sampleRate) :
-    m_random(),
     m_usePrecomputedSample(false),
     m_precomputedSample(0.0f),
+    m_random(),
     m_samples(numChannels, sampleRate)
 {
 }

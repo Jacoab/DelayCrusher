@@ -109,15 +109,6 @@ void CloudCrusherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     if (buffer.getNumChannels() == 0 || buffer.getNumSamples() == 0)
         return;
 
-    bool hasInput = false;
-    for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
-        for (int i = 0; i < buffer.getNumSamples(); ++i)
-            if (buffer.getSample(ch, i) != 0.0f)
-                hasInput = true;
-
-    // Optional: log or breakpoint here
-    // DBG("Buffer has input: " << hasInput);
-
     juce::dsp::AudioBlock<float> audioBlock(buffer);
     juce::dsp::ProcessContextReplacing<float> context(audioBlock);
     m_processorChain.process(context);

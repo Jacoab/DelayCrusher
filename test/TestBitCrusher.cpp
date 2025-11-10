@@ -18,7 +18,7 @@ TEST(TestBitCrusher, ProcessSample)
         // We want to test the sample rate reduction so we alternate between 0.2 and 0.3
         // so that with a sample rate reduction of 2, every even sample will be used and our
         // bit crusher will work with a buffer of values all equal to 0.2.
-        channelData[i] = i % 2 == 0 ? 0.2 : 0.3f;
+        channelData[i] = i % 2 == 0 ? 0.2f : 0.3f;
     }
 
     juce::dsp::AudioBlock<float> audioBlock(audioBuffer);
@@ -39,7 +39,7 @@ TEST(TestBitCrusher, ProcessSample)
     auto& block = context.getOutputBlock();
     auto* processedChannelData = block.getChannelPointer(0);
     auto sampleIsCorrect = true;
-    for (int i = 0; i < block.getNumSamples(); ++i)
+    for (std::size_t i = 0; i < block.getNumSamples(); ++i)
     {
         if (std::abs(processedChannelData[i] - expectedProcessedSample) > 0.00001f)
         {
