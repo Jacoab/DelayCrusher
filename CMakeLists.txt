@@ -20,11 +20,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
 
 set(${PROJECT_NAME}_Sources
-    src/BoxMullerNoise.cpp
+    src/processors/BoxMullerNoise.cpp
+    src/processorsDelay.cpp
+    src/components/Dial.cpp
     src/PluginProcessor.cpp
     src/PluginEditor.cpp
-    src/Delay.cpp
-    src/components/Dial.cpp
 )
 
 #
@@ -60,11 +60,12 @@ juce_add_plugin(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include/components
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/processors
 )
 
 # Create the main plugin target
 target_sources(${PROJECT_NAME} PRIVATE
-    ${${PROJECT_NAME}_Sources}
+    ${PROJECT_NAME}_Sources
 )
 target_compile_definitions(${PROJECT_NAME} PUBLIC
     JUCE_WEB_BROWSER=0
@@ -107,6 +108,7 @@ add_executable(${PROJECT_NAME}Test
 target_include_directories(${PROJECT_NAME}Test PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include/components
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/processors
 )
 
 target_link_libraries(${PROJECT_NAME}Test

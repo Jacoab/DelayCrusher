@@ -6,7 +6,7 @@
 #include <juce_dsp/juce_dsp.h>
 
 #include "concepts/NoiseGenType.h"
-#include "BoxMullerNoise.h"
+#include "processors/BoxMullerNoise.h"
 
 namespace glos::clcr 
 {

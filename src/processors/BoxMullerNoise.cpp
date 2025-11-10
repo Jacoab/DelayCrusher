@@ -1,4 +1,4 @@
-#include "BoxMullerNoise.h"
+#include "processors/BoxMullerNoise.h"
 
 namespace glos::clcr
 {

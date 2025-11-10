@@ -4,9 +4,9 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #include "components/Dial.h"
+#include "processors/BitCrusher.h"
+#include "processors/Delay.h"
 #include "PluginProcessor.h"
-#include "BitCrusher.h"
-#include "Delay.h"
 
 namespace glos::clcr
 {

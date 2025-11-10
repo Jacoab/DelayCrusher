@@ -5,10 +5,9 @@
 #include <juce_core/juce_core.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
-
-#include "BoxMullerNoise.h"
-#include "BitCrusher.h"
-#include "Delay.h"
+#include "processors/BoxMullerNoise.h"
+#include "processors/BitCrusher.h"
+#include "processors/Delay.h"
 
 namespace glos::clcr
 {
