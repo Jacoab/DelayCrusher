@@ -1,11 +1,25 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(CloudCrusher VERSION 0.1.0)
+#
+# Project setup and configuration
+#
+set(PROJECT_NAME "CloudCrusher")
+set(PROJECT_VERSION 0.2.0)
+
+project(${PROJECT_NAME} VERSION ${PROJECT_VERSION})
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
+endif()
+
+include(CTest)
+option(BUILD_TESTING "Build the testing tree." ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
-set(CloudCrusher_Sources
+
+set(${PROJECT_NAME}_Sources
     src/BoxMullerNoise.cpp
     src/PluginProcessor.cpp
     src/PluginEditor.cpp
@@ -13,7 +27,9 @@ set(CloudCrusher_Sources
     src/components/Dial.cpp
 )
 
+#
 # Add googletest as a dependency
+#
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -23,9 +39,11 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-# Setup JUCE
+#
+# Setup project as JUCE VST3 plugin
+#
 add_subdirectory(JUCE)
-juce_add_plugin(CloudCrusher
+juce_add_plugin(${PROJECT_NAME}
     COMPANY_NAME "GlossolaliaAudio"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
@@ -35,25 +53,25 @@ juce_add_plugin(CloudCrusher
     PLUGIN_MANUFACTURER_CODE Glos
     PLUGIN_CODE ClCr
     FORMATS VST3
-    PRODUCT_NAME "CloudCrusher"
+    PRODUCT_NAME ${PROJECT_NAME}
 )
 
 # Make template headers available to all targets
-target_include_directories(CloudCrusher PUBLIC
+target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include/components
 )
 
 # Create the main plugin target
-target_sources(CloudCrusher PRIVATE
-    ${CloudCrusher_Sources}
+target_sources(${PROJECT_NAME} PRIVATE
+    ${${PROJECT_NAME}_Sources}
 )
-target_compile_definitions(CloudCrusher PUBLIC
+target_compile_definitions(${PROJECT_NAME} PUBLIC
     JUCE_WEB_BROWSER=0
     JUCE_USE_CURL=0
     JUCE_VST3_CAN_REPLACE_VST2=0
 )
-target_link_libraries(CloudCrusher
+target_link_libraries(${PROJECT_NAME}
     PRIVATE
         juce::juce_core
         juce::juce_audio_processors
@@ -67,9 +85,18 @@ target_link_libraries(CloudCrusher
 )
 
 # Create plugin test target
-enable_testing()
-add_executable(CloudCrusherTest
-    ${CloudCrusher_Sources}
+if(BUILD_TESTING)
+    enable_testing()
+    add_test(
+        NAME ${PROJECT_NAME}Tests
+        COMMAND ${PROJECT_NAME}Test
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    )
+endif()
+
+# Replace existing gtest_discover_tests with:
+add_executable(${PROJECT_NAME}Test
+    ${PROJECT_NAME}_Sources
     test/utils/ConstNoise.cpp
     test/TestBoxMullerNoise.cpp
     test/TestBitCrusher.cpp
@@ -77,12 +104,12 @@ add_executable(CloudCrusherTest
     test/TestDelay.cpp
     test/main.cpp
 )
-target_include_directories(CloudCrusherTest PUBLIC
+target_include_directories(${PROJECT_NAME}Test PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include/components
 )
 
-target_link_libraries(CloudCrusherTest
+target_link_libraries(${PROJECT_NAME}Test
     PRIVATE
         GTest::gtest_main
         juce::juce_audio_processors
@@ -93,4 +120,3 @@ target_link_libraries(CloudCrusherTest
         juce::juce_recommended_warning_flags
 )
 include(GoogleTest)
-gtest_discover_tests(CloudCrusherTest)
