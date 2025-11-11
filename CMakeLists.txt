@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
+cmake_policy(SET CMP0135 NEW)
 
 #
 # Project setup and configuration
@@ -19,9 +20,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
 
-set(${PROJECT_NAME}_Sources
+set(PROJECT_SOURCES
     src/processors/BoxMullerNoise.cpp
-    src/processorsDelay.cpp
+    src/processors/Delay.cpp
     src/components/Dial.cpp
     src/PluginProcessor.cpp
     src/PluginEditor.cpp
@@ -65,7 +66,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 # Create the main plugin target
 target_sources(${PROJECT_NAME} PRIVATE
-    ${PROJECT_NAME}_Sources
+    ${PROJECT_SOURCES}
 )
 target_compile_definitions(${PROJECT_NAME} PUBLIC
     JUCE_WEB_BROWSER=0
@@ -97,7 +98,7 @@ endif()
 
 # Replace existing gtest_discover_tests with:
 add_executable(${PROJECT_NAME}Test
-    ${PROJECT_NAME}_Sources
+    ${PROJECT_SOURCES}
     test/utils/ConstNoise.cpp
     test/TestBoxMullerNoise.cpp
     test/TestBitCrusher.cpp
