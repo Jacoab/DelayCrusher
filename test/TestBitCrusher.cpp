@@ -7,46 +7,40 @@
 
 TEST(TestBitCrusher, ProcessSample)
 {
-    auto testNoise = ConstNoise(0.01f);
-
     auto numChannels = 1;
     auto sampleRate = 44100;
-    juce::AudioBuffer<float> audioBuffer(numChannels, sampleRate);
+    auto bufferSamples = 16;
+    juce::AudioBuffer<float> audioBuffer(numChannels, bufferSamples);
     auto *channelData = audioBuffer.getWritePointer(0);
     for (int i = 0; i < audioBuffer.getNumSamples(); ++i)
     {
-        // We want to test the sample rate reduction so we alternate between 0.2 and 0.3
-        // so that with a sample rate reduction of 2, every even sample will be used and our
-        // bit crusher will work with a buffer of values all equal to 0.2.
+        // Alternate between 0.2 and 0.3 for sample rate reduction test
         channelData[i] = i % 2 == 0 ? 0.2f : 0.3f;
     }
 
     juce::dsp::AudioBlock<float> audioBlock(audioBuffer);
     juce::dsp::ProcessContextReplacing<float> context(audioBlock);
 
-    std::atomic<float> sampleRateRedux = 2;
+    std::atomic<float> sampleRateReduxHz = 22050.0f;
     std::atomic<float> bitDepth = 8;
-    std::atomic<float> noiseAmount = 0.5f;
-    auto* sampleRateReduxPtr = &sampleRateRedux;
+    auto* sampleRateReduxPtr = &sampleRateReduxHz;
     auto* bitDepthPtr = &bitDepth;
-    auto* noiseAmountPtr = &noiseAmount;
-    glos::clcr::BitCrusher<ConstNoise> bitCrusher{};
-    bitCrusher.init(sampleRateReduxPtr, bitDepthPtr, noiseAmountPtr, testNoise);
+    glos::clcr::BitCrusher bitCrusher{};
+    bitCrusher.setSampleRateRedux(sampleRateReduxPtr);
+    bitCrusher.setBitDepth(bitDepthPtr);
 
     bitCrusher.process(context);
 
-    auto expectedProcessedSample = 0.20421875f;
+    int holdInterval = static_cast<int>(sampleRate / sampleRateReduxHz + 0.5f);
+
     auto& block = context.getOutputBlock();
     auto* processedChannelData = block.getChannelPointer(0);
-    auto sampleIsCorrect = true;
-    for (std::size_t i = 0; i < block.getNumSamples(); ++i)
+
+    float quantized = std::floor(0.2f * 256.0f) / 256.0f;
+    for (int i = 0; i < block.getNumSamples(); ++i)
     {
-        if (std::abs(processedChannelData[i] - expectedProcessedSample) > 0.00001f)
-        {
-            sampleIsCorrect = false;
-            break;
-        }
+        if (i % holdInterval == 0)
+            quantized = std::floor(channelData[i] * 256.0f) / 256.0f;
+        EXPECT_NEAR(processedChannelData[i], quantized, 0.0001f);
     }
-    
-    ASSERT_TRUE(sampleIsCorrect);
 }

@@ -52,7 +52,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     juce::AudioProcessorValueTreeState& getAPVTS();
-    const glos::clcr::GaussianBitCrusher& getBitCrusher();
+    const glos::clcr::BitCrusher& getBitCrusher();
     const glos::clcr::Delay& getDelay();
     
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
@@ -63,7 +63,7 @@ private:
         BitCrusherIndex,
         DelayIndex
     };
-    juce::dsp::ProcessorChain<GaussianBitCrusher, Delay> m_processorChain;
+    juce::dsp::ProcessorChain<BitCrusher, Delay> m_processorChain;
     juce::AudioProcessorValueTreeState m_apvts;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CloudCrusherAudioProcessor)

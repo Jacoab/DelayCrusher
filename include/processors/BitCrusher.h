@@ -24,8 +24,6 @@ constexpr std::string NOISE_AMOUNT_DIAL_TEXT = "Noise Amount";
  * 
  * @tparam NoiseGen Provides noise samples that can be added to the processed signal.
  */
-template <typename NoiseGen>
-requires NoiseGenType<NoiseGen>
 class BitCrusher : public juce::dsp::ProcessorBase
 {
 public:
@@ -37,152 +35,68 @@ public:
     BitCrusher() = default;
 
     /**
-     * @brief Initializes with a sample rate reduction of sampleRateRedux and a bit depth of bitDepth with a user
-     * provided noise generator.
+     * @brief Set the sample rate reduction parameter.
      * 
-     * @param sampleRateRedux The amount the sample rate will be reduced by.
-     * @param bitDepth The number of bits used to represent each sample after processing.
-     * @param noiseAmount The amount of noise to be added to the processed signal.
-     * @param noiseGenerator The noise generator to use for adding noise to the processed signal.
+     * @param sampleRateRedux Sample rate reduction parameter
      */
-    void init(std::atomic<float>* sampleRateRedux, std::atomic<float>* bitDepth, std::atomic<float>* noiseAmount, NoiseGen noiseGenerator)
-    {
-        m_sampleRateRedux = sampleRateRedux;
-        m_bitDepth = bitDepth;
-        m_noiseAmount = noiseAmount;
-        m_noiseGenerator = noiseGenerator;
-    }
-
-    void init(int numChannels, int sampleRate)
-    {
-        m_noiseGenerator = NoiseGen(numChannels, sampleRate);
-    }
+    void setSampleRateRedux(std::atomic<float>* sampleRateRedux) noexcept;
 
     /**
-     * @brief Set the sample rate reduction of the bit crusher.
+     * @brief Get the sample rate reduction parameter of the bit crusher.
      * 
-     * @param sampleRateRedux
+     * @return std::atomic<float>* Sample rate reduction parameter.
      */
-    void setSampleRateRedux(std::atomic<float>* sampleRateRedux) noexcept
-    {
-        m_sampleRateRedux = sampleRateRedux;
-    }
+    std::atomic<float>* getSampleRateRedux() const noexcept;
 
     /**
-     * @brief Get the sample rate reduction of the bit crusher.
+     * @brief Set parameter representing the number of bits used to represent each sample after processing.
      * 
-     * @return std::atomic<float>* 
+     * @param bitDepth Paremeter for the number of bits used to represent each sample after processing.
      */
-    std::atomic<float>* getSampleRateRedux() const noexcept
-    {
-        return m_sampleRateRedux;
-    }
+    void setBitDepth(std::atomic<float>* bitDepth) noexcept;
 
     /**
-     * @brief Set the number of bits used to represent each sample after processing.
+     * @brief Get parameter representing the number of bits used to represent each sample after processing.
      * 
-     * @param bitDepth 
+     * @return std::atomic<float>* Paremeter for the number of bits used to represent each sample after processing.
      */
-    void setBitDepth(std::atomic<float>* bitDepth) noexcept
-    {
-        m_bitDepth = bitDepth;
-    }
+    std::atomic<float>* getBitDepth() const noexcept;
 
     /**
-     * @brief Get the the bit depth of the bit crusher.
+     * @brief This method is required by DSP ProcessorBase child classes.  It is not currently used
+     * by this class.
      * 
-     * @return std::atomic<float>* 
+     * @param spec 
      */
-    std::atomic<float>* getBitDepth() const noexcept
-    {
-        return m_bitDepth;
-    }
-
-    /**
-     * @brief Set the amount of noise to be added to the processed signal.
-     * 
-     * @param noiseAmount 
-     */
-    void setNoiseAmount(std::atomic<float>* noiseAmount) noexcept
-    {
-        auto noiseAmountVal = noiseAmount->load();
-        jassert(noiseAmountVal >= 0.0f && noiseAmountVal <= 1.0f);
-        m_noiseAmount = noiseAmount;
-    }
-
-    /**
-     * @brief Get the amount of noise to be added to the processed signal.
-     * 
-     * @return std::atomic<float>* 
-     */
-    std::atomic<float>* getNoiseAmount() const noexcept
-    {
-        return m_noiseAmount;
-    }
-
-    void prepare (const juce::dsp::ProcessSpec& spec) override
-    {
-
-    }
+    void prepare (const juce::dsp::ProcessSpec& spec) override;
     
     /**
-     * @brief 
+     * @brief Process the audio context by reducing the sample rate and bit depth of the audio signal.
      * 
-     * @param context 
+     * @param context Context information containing input and output audio blocks.
      */
-    void process (const juce::dsp::ProcessContextReplacing<float>& context) override
-    {
-        auto& block = context.getOutputBlock();
-        auto numChannels = block.getNumChannels();
-        auto numSamples = block.getNumSamples();
-        auto noise = m_noiseGenerator.nextNSamples(static_cast<int>(numSamples));
+    void process (const juce::dsp::ProcessContextReplacing<float>& context) override;
 
-        auto redux = static_cast<int>(m_sampleRateRedux->load());
-        for (std::size_t channel = 0; channel < numChannels; ++channel)
-        {
-            auto* samples = block.getChannelPointer(channel);
-            auto* noiseSamples = noise.getWritePointer(static_cast<int>(channel));
-
-            for (std::size_t i = 0; i < numSamples; ++i)
-            {
-                if (static_cast<int>(i) % redux == 0)
-                    m_heldSample = quantize(samples[i]);
-
-                samples[i] = m_heldSample;
-            }
-
-            juce::FloatVectorOperations::multiply(noiseSamples, m_noiseAmount->load(), numSamples);
-            juce::FloatVectorOperations::add(samples, noiseSamples, numSamples);
-        }
-    }
-
-    void reset() override
-    {
-
-    }
+    /**
+     * @brief Resets the bit crusher state.  This clears the held sample.
+     * 
+     */
+    void reset() override;
 
 private:
     /**
      * @brief Quantize the sample to the specified bit depth.
      * 
      * @param sample Sample to be quantized.
-     * @return float 
+     * @return float Quantized sample.
      */
-    float quantize(float sample) const
-    {
-        float scale = powf(2.0f, m_bitDepth->load());
-        return std::floor(sample * scale) / scale;
-    }
+    float quantize(float sample) const;
 
     std::atomic<float>* m_sampleRateRedux = nullptr; /**< Amount the sample rate will be reduced by */
     float m_heldSample = 0.0f; /**< Current sample that is held and re-used for m_sampleRateRedux iterations */
 
     std::atomic<float>* m_bitDepth = nullptr; /**< Number of bits used to represent each sample after processing */
     std::atomic<float>* m_noiseAmount = nullptr; /**< Percentage of signal made up by generated noise */
-
-    NoiseGen m_noiseGenerator = NoiseGen(); /**< Noise generator */
 };
-
-using GaussianBitCrusher = BitCrusher<BoxMullerNoise>;
 
 } // namespace glos::clcr

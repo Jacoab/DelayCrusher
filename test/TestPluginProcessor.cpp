@@ -32,12 +32,12 @@ TEST(TestPluginProcessor, BitCrusherParameterSync)
 
     ASSERT_EQ(bitCrusher.getSampleRateRedux(), sampleRateReduxParam);
     ASSERT_EQ(bitCrusher.getBitDepth(), bitDepthParam);
-    ASSERT_EQ(bitCrusher.getNoiseAmount(), noiseAmountParam);
+    //ASSERT_EQ(bitCrusher.getNoiseAmount(), noiseAmountParam);
     //ASSERT_EQ(delay.getDelayTime(), delayTimeParam);
 
     EXPECT_FLOAT_EQ(bitCrusher.getSampleRateRedux()->load(), sampleRateRedux);
     EXPECT_FLOAT_EQ(bitCrusher.getBitDepth()->load(), bitDepth);
-    EXPECT_FLOAT_EQ(bitCrusher.getNoiseAmount()->load(), noiseAmount);
+    //EXPECT_FLOAT_EQ(bitCrusher.getNoiseAmount()->load(), noiseAmount);
     EXPECT_FLOAT_EQ(delay.getDelayTime(), delayTime);
 }
 

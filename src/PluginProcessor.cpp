@@ -68,11 +68,9 @@ void CloudCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 
     auto& bitCrusher = m_processorChain.get<BitCrusherIndex>();
 
-    bitCrusher.init(getTotalNumOutputChannels(), static_cast<int>(sampleRate));
-
     bitCrusher.setSampleRateRedux(m_apvts.getRawParameterValue(SAMPLE_RATE_REDUX_DIAL_ID));
     bitCrusher.setBitDepth(m_apvts.getRawParameterValue(BIT_DEPTH_DIAL_ID));
-    bitCrusher.setNoiseAmount(m_apvts.getRawParameterValue(NOISE_AMOUNT_DIAL_ID));
+    //bitCrusher.setNoiseAmount(m_apvts.getRawParameterValue(NOISE_AMOUNT_DIAL_ID));
 
     auto& delay = m_processorChain.get<DelayIndex>();
     delay.setDelayTime(m_apvts.getRawParameterValue(DELAY_TIME_DIAL_ID));
@@ -136,7 +134,7 @@ juce::AudioProcessorValueTreeState& CloudCrusherAudioProcessor::getAPVTS()
     return m_apvts;
 }
 
-const GaussianBitCrusher& CloudCrusherAudioProcessor::getBitCrusher()
+const BitCrusher& CloudCrusherAudioProcessor::getBitCrusher()
 {
     return m_processorChain.get<BitCrusherIndex>();
 }

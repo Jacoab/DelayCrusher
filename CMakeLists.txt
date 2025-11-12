@@ -22,6 +22,7 @@ set(CMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
 
 set(PROJECT_SOURCES
     src/processors/BoxMullerNoise.cpp
+    src/processors/BitCrusher.cpp
     src/processors/Delay.cpp
     src/components/Dial.cpp
     src/PluginProcessor.cpp
