@@ -61,9 +61,10 @@ private:
     // Audio effects
     enum {
         BitCrusherIndex,
+        NoiseIndex,
         DelayIndex
     };
-    juce::dsp::ProcessorChain<BitCrusher, Delay> m_processorChain;
+    juce::dsp::ProcessorChain<BitCrusher, BoxMullerNoise, Delay> m_processorChain;
     juce::AudioProcessorValueTreeState m_apvts;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CloudCrusherAudioProcessor)

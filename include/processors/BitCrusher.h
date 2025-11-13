@@ -15,8 +15,6 @@ constexpr std::string SAMPLE_RATE_REDUX_DIAL_ID = "SAMPLE_RATE_REDUX";
 constexpr std::string SAMPLE_RATE_REDUX_DIAL_TEXT = "Sample Rate Reduction";
 constexpr std::string BIT_DEPTH_DIAL_ID = "BIT_DEPTH";
 constexpr std::string BIT_DEPTH_DIAL_TEXT = "Bit Depth";
-constexpr std::string NOISE_AMOUNT_DIAL_ID = "NOISE_AMOUNT";
-constexpr std::string NOISE_AMOUNT_DIAL_TEXT = "Noise Amount";
 
 /**
  * @brief Bit crusher audio effect that reduces the sample rate and bit depth of an audio signal.

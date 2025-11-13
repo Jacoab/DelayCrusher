@@ -70,7 +70,9 @@ void CloudCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 
     bitCrusher.setSampleRateRedux(m_apvts.getRawParameterValue(SAMPLE_RATE_REDUX_DIAL_ID));
     bitCrusher.setBitDepth(m_apvts.getRawParameterValue(BIT_DEPTH_DIAL_ID));
-    //bitCrusher.setNoiseAmount(m_apvts.getRawParameterValue(NOISE_AMOUNT_DIAL_ID));
+
+    auto& noise = m_processorChain.get<NoiseIndex>();
+    noise.setNoiseAmount(m_apvts.getRawParameterValue(NOISE_AMOUNT_DIAL_ID));
 
     auto& delay = m_processorChain.get<DelayIndex>();
     delay.setDelayTime(m_apvts.getRawParameterValue(DELAY_TIME_DIAL_ID));

@@ -1,6 +1,7 @@
 #include <cmath>
 
 #include <gtest/gtest.h>
+#include <juce_dsp/juce_dsp.h>
 
 #include "BoxMullerNoise.h"
 
@@ -8,26 +9,45 @@ TEST(TestBoxMullerNoise, KolmogorovSmirnovTest)
 {
     auto numChannels = 1;
     auto sampleRate = 10000;
-    auto boxMullerNoise = glos::clcr::BoxMullerNoise(numChannels, sampleRate);
+    auto numSamples = sampleRate; // 44,100 samples for better statistical validity
 
-    auto samples = boxMullerNoise.nextNSamples(sampleRate);
-    auto* channelData = samples.getWritePointer(0);
-    auto numSamples = samples.getNumSamples();
+    // Create audio buffer to fill with noise samples
+    juce::AudioBuffer<float> audioBuffer(numChannels, numSamples);
+    audioBuffer.clear();
 
+    // Prepare the processor
+    juce::dsp::ProcessSpec spec;
+    spec.sampleRate = sampleRate;
+    spec.numChannels = numChannels;
+    spec.maximumBlockSize = numSamples;
+
+    std::atomic<float> noiseAmount(1.0f);
+    glos::clcr::BoxMullerNoise noiseGenerator;
+    noiseGenerator.setNoiseAmount(&noiseAmount);
+    noiseGenerator.prepare(spec);
+
+    // Process the audio block to generate noise
+    juce::dsp::AudioBlock<float> audioBlock(audioBuffer);
+    juce::dsp::ProcessContextReplacing<float> context(audioBlock);
+    noiseGenerator.process(context);
+
+    // Get the generated noise samples
+    auto* channelData = audioBlock.getChannelPointer(0);
+
+    // Sort samples for K-S test
     std::sort(channelData, channelData + numSamples);
 
     auto dMax = 0.0f;
     for (int i = 0; i < numSamples; ++i)
     {
-        auto cdf = 0.5f * std::erfc(-channelData[i] * static_cast<float>(M_SQRT1_2)); // CDF for standard normal distribution
-        auto expectedCDF = static_cast<float>(i + 1) / numSamples; // Empirical CDF for sorted samples
-        auto d = std::max(std::abs(expectedCDF - cdf), std::abs(cdf - static_cast<float>(i) / numSamples)); // K-S D statistic
+        auto cdf = 0.5f * std::erfc(-channelData[i] * static_cast<float>(M_SQRT1_2));
+        auto expectedCDF = static_cast<float>(i + 1) / numSamples;
+        auto d = std::max(std::abs(expectedCDF - cdf), std::abs(cdf - static_cast<float>(i) / numSamples));
         
-        // Keep track of the maximum D statistic
         if (d > dMax) dMax = d;
     }
 
-    // Kolmogorov-Smirnov critical value for given alpha = 0.05
+    // Kolmogorov-Smirnov critical value for alpha = 0.05
     float ksCritical = 1.36f / std::sqrt(static_cast<float>(numSamples));
 
     ASSERT_TRUE(dMax < ksCritical);

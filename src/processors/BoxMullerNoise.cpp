@@ -11,6 +11,50 @@ BoxMullerNoise::BoxMullerNoise(int numChannels, int sampleRate) :
 {
 }
 
+void BoxMullerNoise::setNoiseAmount(std::atomic<float>* noiseAmount) noexcept
+{
+    m_noiseAmount = noiseAmount;
+}
+
+std::atomic<float>* BoxMullerNoise::getNoiseAmount() const noexcept
+{
+    return m_noiseAmount;
+}
+
+void BoxMullerNoise::prepare(const juce::dsp::ProcessSpec& spec)
+{
+    auto numChannels = static_cast<int>(spec.numChannels);
+    auto numSamples = static_cast<int>(spec.maximumBlockSize);
+    m_samples.setSize(numChannels, numSamples); // Might need to change some of the default params here
+}
+    
+void BoxMullerNoise::process(const juce::dsp::ProcessContextReplacing<float>& context)
+{
+    auto& block = context.getOutputBlock();
+    auto numChannels = block.getNumChannels();
+    auto numSamples = block.getNumSamples();
+    auto noise = nextNSamples(static_cast<int>(numSamples));
+
+    for (size_t channel = 0; channel < numChannels; ++channel)
+    {
+        auto* channelData = block.getChannelPointer(channel);
+        auto* noiseSamples = noise.getWritePointer(static_cast<int>(channel));
+        auto noiseAmount = m_noiseAmount ? m_noiseAmount->load() : 0.0f;
+        auto numValues = static_cast<int>(numSamples);
+
+        // Scale noise by noise amount parameter
+        juce::FloatVectorOperations::multiply(noiseSamples, noiseAmount, numValues);
+        juce::FloatVectorOperations::add(channelData, noiseSamples, numValues);
+    }
+}
+
+void BoxMullerNoise::reset()
+{
+    m_usePrecomputedSample = false;
+    m_precomputedSample = 0.0f;
+    m_samples.clear();
+}
+
 float BoxMullerNoise::nextSample() noexcept
 {
     // Since the Box-Muller transform generates two independent samples, check to see if
