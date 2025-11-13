@@ -27,6 +27,7 @@ private:
     Dial m_noiseAmountDial;
 
     Dial m_delayTimeDial;
+    Dial m_delayDryWetDial;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CloudCrusherAudioProcessorEditor)
 };

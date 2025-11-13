@@ -13,32 +13,36 @@ TEST(TestPluginProcessor, BitCrusherParameterSync)
     processor.prepareToPlay(44100.0, 512);
 
     const auto& bitCrusher = processor.getBitCrusher();
+    const auto& noiseGenerator = processor.getNoiseGenerator();
     const auto& delay = processor.getDelay();
 
     auto* sampleRateReduxParam = apvts.getRawParameterValue(glos::clcr::SAMPLE_RATE_REDUX_DIAL_ID);
     auto* bitDepthParam = apvts.getRawParameterValue(glos::clcr::BIT_DEPTH_DIAL_ID);
     auto* noiseAmountParam = apvts.getRawParameterValue(glos::clcr::NOISE_AMOUNT_DIAL_ID);
     auto* delayTimeParam = apvts.getRawParameterValue(glos::clcr::DELAY_TIME_DIAL_ID);
+    auto* delayDryWetParam = apvts.getRawParameterValue(glos::clcr::DELAY_DRY_WET_DIAL_ID);
 
     auto sampleRateRedux = 4.0f;
     auto bitDepth = 12.0f;
     auto noiseAmount = 0.75f;
     auto delayTime = 250.0f;
+    auto delayDryWet = 0.5f;
     
     sampleRateReduxParam->store(sampleRateRedux);
     bitDepthParam->store(bitDepth);
     noiseAmountParam->store(noiseAmount);
     delayTimeParam->store(delayTime);
+    delayDryWetParam->store(delayDryWet);
 
     ASSERT_EQ(bitCrusher.getSampleRateRedux(), sampleRateReduxParam);
     ASSERT_EQ(bitCrusher.getBitDepth(), bitDepthParam);
-    //ASSERT_EQ(bitCrusher.getNoiseAmount(), noiseAmountParam);
-    //ASSERT_EQ(delay.getDelayTime(), delayTimeParam);
+    ASSERT_EQ(noiseGenerator.getNoiseAmount(), noiseAmountParam);
 
     EXPECT_FLOAT_EQ(bitCrusher.getSampleRateRedux()->load(), sampleRateRedux);
     EXPECT_FLOAT_EQ(bitCrusher.getBitDepth()->load(), bitDepth);
-    //EXPECT_FLOAT_EQ(bitCrusher.getNoiseAmount()->load(), noiseAmount);
+    EXPECT_FLOAT_EQ(noiseGenerator.getNoiseAmount()->load(), noiseAmount);
     EXPECT_FLOAT_EQ(delay.getDelayTime(), delayTime);
+    EXPECT_FLOAT_EQ(delay.getDryWet(), delayDryWet);
 }
 
 
@@ -53,11 +57,13 @@ TEST(TestPluginProcessor, ProcessBlockUsesUpdatedParameters)
     auto* bitDepthParam = apvts.getRawParameterValue(glos::clcr::BIT_DEPTH_DIAL_ID);
     auto* noiseAmountParam = apvts.getRawParameterValue(glos::clcr::NOISE_AMOUNT_DIAL_ID);
     auto* delayTimeParam = apvts.getRawParameterValue(glos::clcr::DELAY_TIME_DIAL_ID);
+    auto* delayDryWetParam = apvts.getRawParameterValue(glos::clcr::DELAY_DRY_WET_DIAL_ID);
 
     sampleRateReduxParam->store(2.0f);
     bitDepthParam->store(8.0f);
     noiseAmountParam->store(0.5f);
     delayTimeParam->store(1000.0f);
+    delayDryWetParam->store(0.5f);
 
     juce::AudioBuffer<float> buffer(2, 512);
     juce::MidiBuffer midi;

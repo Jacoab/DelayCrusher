@@ -76,6 +76,7 @@ void CloudCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 
     auto& delay = m_processorChain.get<DelayIndex>();
     delay.setDelayTime(m_apvts.getRawParameterValue(DELAY_TIME_DIAL_ID));
+    delay.setDryWet(m_apvts.getRawParameterValue(DELAY_DRY_WET_DIAL_ID));
 
     m_processorChain.prepare(spec);
 }
@@ -141,6 +142,11 @@ const BitCrusher& CloudCrusherAudioProcessor::getBitCrusher()
     return m_processorChain.get<BitCrusherIndex>();
 }
 
+const BoxMullerNoise& CloudCrusherAudioProcessor::getNoiseGenerator()
+{
+    return m_processorChain.get<NoiseIndex>();
+}
+
 const Delay& CloudCrusherAudioProcessor::getDelay()
 {
     return m_processorChain.get<DelayIndex>();
@@ -194,10 +200,22 @@ juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::
         delayTimeDefault
     );
 
+        auto dryWetMin = 0.0f;
+        auto dryWetMax = 1.0f;
+        auto dryWetStep = 0.01f;
+        auto dryWetDefault = noiseAmountMin;
+        auto dryWetParam = std::make_unique<juce::AudioParameterFloat> (
+            DELAY_DRY_WET_DIAL_ID,
+            DELAY_DRY_WET_DIAL_TEXT,
+            juce::NormalisableRange<float>(dryWetMin, dryWetMax, dryWetStep),
+            noiseAmountDefault
+        );
+
     layout.add(std::move(bitDepthParam));
     layout.add(std::move(sampleRateReduxParam));
     layout.add(std::move(noiseAmountParam));
     layout.add(std::move(delayTimeParam));
+    layout.add(std::move(dryWetParam));
 
     return layout;
 }

@@ -8,7 +8,16 @@ namespace glos::clcr
 
 constexpr std::string DELAY_TIME_DIAL_ID = "DELAY_TIME";
 constexpr std::string DELAY_TIME_DIAL_TEXT = "Delay Time (ms)";
+constexpr std::string DELAY_DRY_WET_DIAL_ID = "DELAY_DRY_WET";
+constexpr std::string DELAY_DRY_WET_DIAL_TEXT = "Delay Dry/Wet";
 
+/**
+ * @class Delay
+ * @brief Delay audio effect class.  This effect is a juce::dsp::ProcessorBase
+ * based class that will take an incoming audio signal in a juce::ProcessorChain
+ * and apply a delay to it.
+ * 
+ */
 class Delay : public juce::dsp::ProcessorBase
 {
 public:
@@ -33,6 +42,20 @@ public:
     float getDelayTime() const;
 
     /**
+     * @brief Set the dry wet mix parameter.
+     * 
+     * @param dryWet Dry/Wet mix parameter.
+     */
+    void setDryWet(std::atomic<float>* dryWet);
+
+    /**
+     * @brief Get the current dry wet mix parameter value.
+     * 
+     * @return float Current dry wet mix parameter value.
+     */
+    float getDryWet() const;
+
+    /**
      * @brief Initializes the delay line and sets the sample rate.
      * 
      * @param spec Process specification containing audio host info.
@@ -48,6 +71,9 @@ public:
      */
     void process (const juce::dsp::ProcessContextReplacing<float>& context) override;
 
+    /**
+     * @brief Resets the delay line.
+     */
     void reset() override;
 
 private:
@@ -62,6 +88,7 @@ private:
     double m_sampleRate = 44100.0; /**< Sample rate of the audio host. */
 
     std::atomic<float>* m_delayTime = nullptr; /** Delay time in milliseconds. */
+    std::atomic<float>* m_dryWet = nullptr; /** Dry/Wet mix parameter. */
 };
 
 }

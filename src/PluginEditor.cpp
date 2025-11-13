@@ -9,7 +9,8 @@ CloudCrusherAudioProcessorEditor::CloudCrusherAudioProcessorEditor (CloudCrusher
     m_sampleRateReduxDial(SAMPLE_RATE_REDUX_DIAL_TEXT, m_audioProcessor.getAPVTS(), SAMPLE_RATE_REDUX_DIAL_ID),
     m_bitDepthDial(BIT_DEPTH_DIAL_TEXT, m_audioProcessor.getAPVTS(), BIT_DEPTH_DIAL_ID),
     m_noiseAmountDial(NOISE_AMOUNT_DIAL_TEXT, m_audioProcessor.getAPVTS(), NOISE_AMOUNT_DIAL_ID),
-    m_delayTimeDial(DELAY_TIME_DIAL_TEXT, m_audioProcessor.getAPVTS(), DELAY_TIME_DIAL_ID)
+    m_delayTimeDial(DELAY_TIME_DIAL_TEXT, m_audioProcessor.getAPVTS(), DELAY_TIME_DIAL_ID),
+    m_delayDryWetDial(DELAY_DRY_WET_DIAL_TEXT, m_audioProcessor.getAPVTS(), DELAY_DRY_WET_DIAL_ID)
 {
     setSize (400, 300);
 
@@ -18,6 +19,7 @@ CloudCrusherAudioProcessorEditor::CloudCrusherAudioProcessorEditor (CloudCrusher
     addAndMakeVisible(m_noiseAmountDial);
 
     addAndMakeVisible(m_delayTimeDial);
+    addAndMakeVisible(m_delayDryWetDial);
 }
 
 CloudCrusherAudioProcessorEditor::~CloudCrusherAudioProcessorEditor() {}
@@ -35,12 +37,13 @@ void CloudCrusherAudioProcessorEditor::paint (juce::Graphics& g)
 void CloudCrusherAudioProcessorEditor::resized()
 {
     auto area = getLocalBounds().reduced(20);
-    auto knobWidth = area.getWidth() / 4;
+    auto knobWidth = area.getWidth() / 5;
 
     m_sampleRateReduxDial.setBounds(area.removeFromLeft(knobWidth));
     m_bitDepthDial.setBounds(area.removeFromLeft(knobWidth));
     m_noiseAmountDial.setBounds(area.removeFromLeft(knobWidth));
-    m_delayTimeDial.setBounds(area);
+    m_delayTimeDial.setBounds(area.removeFromLeft(knobWidth));
+    m_delayDryWetDial.setBounds(area);
 }
 
 }

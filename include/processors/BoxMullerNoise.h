@@ -11,6 +11,7 @@ constexpr std::string NOISE_AMOUNT_DIAL_ID = "NOISE_AMOUNT";
 constexpr std::string NOISE_AMOUNT_DIAL_TEXT = "Noise Amount";
 
 /**
+ * @class BoxMullerNoise
  * @brief Gaussian white noise generator using the Box-Muller transform.
  * 
  */

@@ -13,6 +13,16 @@ float Delay::getDelayTime() const
     return m_delayTime ? m_delayTime->load() : 0.0f;
 }
 
+void Delay::setDryWet(std::atomic<float>* dryWet)
+{
+    m_dryWet = dryWet;
+}
+
+float Delay::getDryWet() const
+{
+    return m_dryWet ? m_dryWet->load() : 0.0f;
+}
+
 void Delay::prepare (const juce::dsp::ProcessSpec& spec)
 {
     m_sampleRate = spec.sampleRate;
@@ -38,7 +48,7 @@ void Delay::process (const juce::dsp::ProcessContextReplacing<float>& context)
             m_delayLine.pushSample(static_cast<int>(channel), inputSample);
 
             auto outputSample = m_delayLine.popSample(static_cast<int>(channel), getDelayTimeInSamples(), true);
-            channelData[sample] = inputSample + outputSample*0.3f;
+            channelData[sample] = inputSample + outputSample * getDryWet();
         }
     }
 }
@@ -50,9 +60,6 @@ void Delay::reset()
 
 int Delay::getDelayTimeInSamples() const
 {
-    // Delay time stored as milliseconds; convert to seconds first.
-    // Previously: return static_cast<int>(getDelayTime() * m_sampleRate);
-    // That multiplied milliseconds by sample rate giving ~1000x too large a value.
     double delaySeconds = static_cast<double>(getDelayTime()) / 1000.0;
     return static_cast<int>(std::round(delaySeconds * m_sampleRate));
 }

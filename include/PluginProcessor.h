@@ -53,6 +53,7 @@ public:
 
     juce::AudioProcessorValueTreeState& getAPVTS();
     const glos::clcr::BitCrusher& getBitCrusher();
+    const glos::clcr::BoxMullerNoise& getNoiseGenerator();
     const glos::clcr::Delay& getDelay();
     
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

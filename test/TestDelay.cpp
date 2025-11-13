@@ -8,6 +8,7 @@ TEST(TestDelay, ProcessDelay)
     spec.sampleRate = 44100.0;
 
     std::atomic<float> delayTime(0.5f); // 0.5 seconds delay
+    std::atomic<float> dryWet(0.3f);
     auto delayTimeInSamples = static_cast<int>(delayTime.load() * spec.sampleRate);
 
     // make room for some samples after the delay
@@ -17,6 +18,7 @@ TEST(TestDelay, ProcessDelay)
     glos::clcr::Delay delay;
     
     delay.setDelayTime(&delayTime);
+    delay.setDryWet(&dryWet);
     delay.prepare(spec);
 
     // allocate buffer using maximumBlockSize so there are samples after the delay
