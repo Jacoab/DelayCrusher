@@ -34,13 +34,9 @@ TEST(TestPluginProcessor, BitCrusherParameterSync)
     delayTimeParam->store(delayTime);
     delayDryWetParam->store(delayDryWet);
 
-    ASSERT_EQ(bitCrusher.getSampleRateRedux(), sampleRateReduxParam);
-    ASSERT_EQ(bitCrusher.getBitDepth(), bitDepthParam);
-    ASSERT_EQ(noiseGenerator.getNoiseAmount(), noiseAmountParam);
-
-    EXPECT_FLOAT_EQ(bitCrusher.getSampleRateRedux()->load(), sampleRateRedux);
-    EXPECT_FLOAT_EQ(bitCrusher.getBitDepth()->load(), bitDepth);
-    EXPECT_FLOAT_EQ(noiseGenerator.getNoiseAmount()->load(), noiseAmount);
+    EXPECT_FLOAT_EQ(bitCrusher.getSampleRateRedux(), sampleRateRedux);
+    EXPECT_FLOAT_EQ(bitCrusher.getBitDepth(), bitDepth);
+    EXPECT_FLOAT_EQ(noiseGenerator.getNoiseAmount(), noiseAmount);
     EXPECT_FLOAT_EQ(delay.getDelayTime(), delayTime);
     EXPECT_FLOAT_EQ(delay.getDryWet(), delayDryWet);
 }

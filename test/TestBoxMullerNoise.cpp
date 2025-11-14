@@ -8,8 +8,8 @@
 TEST(TestBoxMullerNoise, KolmogorovSmirnovTest)
 {
     auto numChannels = 1;
-    auto sampleRate = 10000;
-    auto numSamples = sampleRate; // 44,100 samples for better statistical validity
+    auto sampleRate = 10000.0;
+    auto numSamples = static_cast<uint32_t>(sampleRate);
 
     // Create audio buffer to fill with noise samples
     juce::AudioBuffer<float> audioBuffer(numChannels, numSamples);
@@ -18,12 +18,12 @@ TEST(TestBoxMullerNoise, KolmogorovSmirnovTest)
     // Prepare the processor
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
-    spec.numChannels = numChannels;
+    spec.numChannels = static_cast<uint32_t>(numChannels);
     spec.maximumBlockSize = numSamples;
 
     std::atomic<float> noiseAmount(1.0f);
     glos::clcr::BoxMullerNoise noiseGenerator;
-    noiseGenerator.setNoiseAmount(&noiseAmount);
+    noiseGenerator.setNoiseAmountParam(&noiseAmount);
     noiseGenerator.prepare(spec);
 
     // Process the audio block to generate noise

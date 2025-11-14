@@ -26,26 +26,18 @@ public:
     BoxMullerNoise() = default;
 
     /**
-     * @brief Construct a new Box Muller Noise object
-     * 
-     * @param numChannels Number of channels to generate noise for
-     * @param sampleRate Host sample rate
-     */
-    BoxMullerNoise(int numChannels, int sampleRate);
-
-    /**
      * @brief Set the noise amount parameter.
      * 
      * @param noiseAmount Noise amount parameter
      */
-    void setNoiseAmount(std::atomic<float>* noiseAmount) noexcept;
+    void setNoiseAmountParam(std::atomic<float>* noiseAmountParam) noexcept;
 
     /**
-     * @brief Get the noise amount parameter
+     * @brief Get the current noise amount value
      * 
-     * @return std::atomic<float>*
+     * @return float Noise amount value
      */
-    std::atomic<float>* getNoiseAmount() const noexcept;
+    float getNoiseAmount() const noexcept;
 
     /**
      * @brief Sets the number of channels to generate noise for and the sample rate.

@@ -3,22 +3,14 @@
 namespace glos::clcr
 {
 
-BoxMullerNoise::BoxMullerNoise(int numChannels, int sampleRate) :
-    m_usePrecomputedSample(false),
-    m_precomputedSample(0.0f),
-    m_random(),
-    m_samples(numChannels, sampleRate)
+void BoxMullerNoise::setNoiseAmountParam(std::atomic<float>* noiseAmountParam) noexcept
 {
+    m_noiseAmount = noiseAmountParam;
 }
 
-void BoxMullerNoise::setNoiseAmount(std::atomic<float>* noiseAmount) noexcept
+float BoxMullerNoise::getNoiseAmount() const noexcept
 {
-    m_noiseAmount = noiseAmount;
-}
-
-std::atomic<float>* BoxMullerNoise::getNoiseAmount() const noexcept
-{
-    return m_noiseAmount;
+    return m_noiseAmount ? m_noiseAmount->load() : 0.0f;
 }
 
 void BoxMullerNoise::prepare(const juce::dsp::ProcessSpec& spec)

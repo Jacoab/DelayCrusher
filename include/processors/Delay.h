@@ -28,25 +28,25 @@ public:
     Delay() = default;
 
     /**
-     * @brief Sets the delay time in milliseconds.
+     * @brief Sets the delay time parameter in milliseconds.
      * 
-     * @param delayTime delay time in milliseconds.
+     * @param delayTimeParam delay time in milliseconds.
      */
-    void setDelayTime(std::atomic<float>* delayTime);
+    void setDelayTimeParam(std::atomic<float>* delayTimeParam);
 
     /**
-     * @brief Gets the delay time in milliseconds.
+     * @brief Gets the delay time parameter value in milliseconds.
      * 
-     * @return float delay time in milliseconds.
+     * @return float delay time parameter value in milliseconds.
      */
     float getDelayTime() const;
 
     /**
      * @brief Set the dry wet mix parameter.
      * 
-     * @param dryWet Dry/Wet mix parameter.
+     * @param dryWetParam Dry/Wet mix parameter.
      */
-    void setDryWet(std::atomic<float>* dryWet);
+    void setDryWetParam(std::atomic<float>* dryWetParam);
 
     /**
      * @brief Get the current dry wet mix parameter value.

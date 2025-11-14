@@ -3,24 +3,24 @@
 namespace glos::clcr 
 {
 
-void BitCrusher::setSampleRateRedux(std::atomic<float>* sampleRateRedux) noexcept
+void BitCrusher::setSampleRateReduxParam(std::atomic<float>* sampleRateRedux) noexcept
 {
     m_sampleRateRedux = sampleRateRedux;
 }
 
-std::atomic<float>* BitCrusher::getSampleRateRedux() const noexcept
+float BitCrusher::getSampleRateRedux() const noexcept
 {
-    return m_sampleRateRedux;
+    return m_sampleRateRedux ? m_sampleRateRedux->load() : 0.0f;
 }
 
-void BitCrusher::setBitDepth(std::atomic<float>* bitDepth) noexcept
+void BitCrusher::setBitDepthParam(std::atomic<float>* bitDepthParam) noexcept
 {
-    m_bitDepth = bitDepth;
+    m_bitDepth = bitDepthParam;
 }
 
-std::atomic<float>* BitCrusher::getBitDepth() const noexcept
+float BitCrusher::getBitDepth() const noexcept
 {
-    return m_bitDepth;
+    return m_bitDepth ? m_bitDepth->load() : 32.0f;
 }
 
 void BitCrusher::prepare (const juce::dsp::ProcessSpec& spec)
@@ -33,13 +33,11 @@ void BitCrusher::process (const juce::dsp::ProcessContextReplacing<float>& conte
     auto& block = context.getOutputBlock();
     auto numChannels = block.getNumChannels();
     auto numSamples = block.getNumSamples();
-    //auto noise = m_noiseGenerator.nextNSamples(static_cast<int>(numSamples));
 
     auto redux = static_cast<int>(m_sampleRateRedux->load());
     for (std::size_t channel = 0; channel < numChannels; ++channel)
     {
         auto* samples = block.getChannelPointer(channel);
-        //auto* noiseSamples = noise.getWritePointer(static_cast<int>(channel));
 
         for (std::size_t i = 0; i < numSamples; ++i)
         {
@@ -48,9 +46,6 @@ void BitCrusher::process (const juce::dsp::ProcessContextReplacing<float>& conte
 
             samples[i] = m_heldSample;
         }
-
-        //juce::FloatVectorOperations::multiply(noiseSamples, m_noiseAmount->load(), numSamples);
-        //juce::FloatVectorOperations::add(samples, noiseSamples, numSamples);
     }
 }
 

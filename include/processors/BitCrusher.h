@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <memory>
 
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>
@@ -37,28 +38,28 @@ public:
      * 
      * @param sampleRateRedux Sample rate reduction parameter
      */
-    void setSampleRateRedux(std::atomic<float>* sampleRateRedux) noexcept;
+    void setSampleRateReduxParam(std::atomic<float>* sampleRateReduxParam) noexcept;
 
     /**
-     * @brief Get the sample rate reduction parameter of the bit crusher.
+     * @brief Get the sample rate reduction of the bit crusher.
      * 
-     * @return std::atomic<float>* Sample rate reduction parameter.
+     * @return float Sample rate reduction.
      */
-    std::atomic<float>* getSampleRateRedux() const noexcept;
+    float getSampleRateRedux() const noexcept;
 
     /**
      * @brief Set parameter representing the number of bits used to represent each sample after processing.
      * 
-     * @param bitDepth Paremeter for the number of bits used to represent each sample after processing.
+     * @param bitDepthParam Paremeter for the number of bits used to represent each sample after processing.
      */
-    void setBitDepth(std::atomic<float>* bitDepth) noexcept;
+    void setBitDepthParam(std::atomic<float>* bitDepthParam) noexcept;
 
     /**
-     * @brief Get parameter representing the number of bits used to represent each sample after processing.
+     * @brief Get the number of bits used to represent each sample after processing.
      * 
-     * @return std::atomic<float>* Paremeter for the number of bits used to represent each sample after processing.
+     * @return float The number of bits used to represent each sample after processing.
      */
-    std::atomic<float>* getBitDepth() const noexcept;
+    float getBitDepth() const noexcept;
 
     /**
      * @brief This method is required by DSP ProcessorBase child classes.  It is not currently used
@@ -90,11 +91,10 @@ private:
      */
     float quantize(float sample) const;
 
-    std::atomic<float>* m_sampleRateRedux = nullptr; /**< Amount the sample rate will be reduced by */
     float m_heldSample = 0.0f; /**< Current sample that is held and re-used for m_sampleRateRedux iterations */
 
-    std::atomic<float>* m_bitDepth = nullptr; /**< Number of bits used to represent each sample after processing */
-    std::atomic<float>* m_noiseAmount = nullptr; /**< Percentage of signal made up by generated noise */
+    std::atomic<float>* m_sampleRateRedux; /**< Amount the sample rate will be reduced by */
+    std::atomic<float>* m_bitDepth; /**< Number of bits used to represent each sample after processing */
 };
 
 } // namespace glos::clcr

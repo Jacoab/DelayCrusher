@@ -3,7 +3,7 @@
 namespace glos::clcr
 {
 
-void Delay::setDelayTime(std::atomic<float>* delayTime)
+void Delay::setDelayTimeParam(std::atomic<float>* delayTime)
 {
     m_delayTime = delayTime;
 }
@@ -13,7 +13,7 @@ float Delay::getDelayTime() const
     return m_delayTime ? m_delayTime->load() : 0.0f;
 }
 
-void Delay::setDryWet(std::atomic<float>* dryWet)
+void Delay::setDryWetParam(std::atomic<float>* dryWet)
 {
     m_dryWet = dryWet;
 }

@@ -17,8 +17,8 @@ TEST(TestDelay, ProcessDelay)
 
     glos::clcr::Delay delay;
     
-    delay.setDelayTime(&delayTime);
-    delay.setDryWet(&dryWet);
+    delay.setDelayTimeParam(&delayTime);
+    delay.setDryWetParam(&dryWet);
     delay.prepare(spec);
 
     // allocate buffer using maximumBlockSize so there are samples after the delay
