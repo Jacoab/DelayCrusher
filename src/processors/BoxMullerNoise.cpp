@@ -17,7 +17,7 @@ void BoxMullerNoise::prepare(const juce::dsp::ProcessSpec& spec)
 {
     auto numChannels = static_cast<int>(spec.numChannels);
     auto numSamples = static_cast<int>(spec.maximumBlockSize);
-    m_samples.setSize(numChannels, numSamples); // Might need to change some of the default params here
+    m_samples.setSize(numChannels, numSamples);
 }
     
 void BoxMullerNoise::process(const juce::dsp::ProcessContextReplacing<float>& context)
@@ -27,12 +27,17 @@ void BoxMullerNoise::process(const juce::dsp::ProcessContextReplacing<float>& co
     auto numSamples = block.getNumSamples();
     auto noise = nextNSamples(static_cast<int>(numSamples));
 
+    jassert(noise.getNumChannels() == numChannels);
+    jassert(noise.getNumSamples() == numSamples);
+
     for (size_t channel = 0; channel < numChannels; ++channel)
     {
         auto* channelData = block.getChannelPointer(channel);
         auto* noiseSamples = noise.getWritePointer(static_cast<int>(channel));
         auto noiseAmount = m_noiseAmount ? m_noiseAmount->load() : 0.0f;
         auto numValues = static_cast<int>(numSamples);
+
+        jassert(noiseAmount >= 0.0f && noiseAmount <= 1.0f);
 
         // Scale noise by noise amount parameter
         juce::FloatVectorOperations::multiply(noiseSamples, noiseAmount, numValues);
@@ -73,7 +78,7 @@ float BoxMullerNoise::nextSample() noexcept
 
 juce::AudioBuffer<float> BoxMullerNoise::nextNSamples(int n) noexcept
 {
-    jassert (n > 0 && n <= m_samples.getNumSamples());
+    jassert(n > 0 && n <= m_samples.getNumSamples());
 
     m_samples.clear();
     for (auto channel = 0; channel < m_samples.getNumChannels(); ++channel)
