@@ -16,7 +16,7 @@ endif()
 include(CTest)
 option(BUILD_TESTING "Build the testing tree." ON)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
 
@@ -105,6 +105,7 @@ add_executable(${PROJECT_NAME}Test
     test/TestBitCrusher.cpp
     test/TestPluginProcessor.cpp
     test/TestDelay.cpp
+    test/TestProcessorParam.cpp
     test/main.cpp
 )
 target_include_directories(${PROJECT_NAME}Test PUBLIC
@@ -116,6 +117,7 @@ target_include_directories(${PROJECT_NAME}Test PUBLIC
 target_link_libraries(${PROJECT_NAME}Test
     PRIVATE
         GTest::gtest_main
+        GTest::gmock_main
         juce::juce_audio_processors
         juce::juce_dsp
     PUBLIC
