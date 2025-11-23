@@ -3,36 +3,34 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>
 
+#include "processors/SynchronizedProcessor.h"
+#include "ProcessorParam.h"
+
 namespace glos::clcr
 {
 
-constexpr std::string DELAY_TIME_DIAL_ID = "DELAY_TIME";
-constexpr std::string DELAY_TIME_DIAL_TEXT = "Delay Time (ms)";
-constexpr std::string DELAY_DRY_WET_DIAL_ID = "DELAY_DRY_WET";
-constexpr std::string DELAY_DRY_WET_DIAL_TEXT = "Delay Dry/Wet";
-
 /**
  * @class Delay
- * @brief Delay audio effect class.  This effect is a juce::dsp::ProcessorBase
+ * @brief Delay audio effect class.  This effect is a SynchronizedProcessor
  * based class that will take an incoming audio signal in a juce::ProcessorChain
  * and apply a delay to it.
  * 
  */
-class Delay : public juce::dsp::ProcessorBase
+class Delay : public SynchronizedProcessor
 {
 public:
     /**
      * @brief Construct a new Delay object.
      * 
      */
-    Delay() = default;
+    Delay();
 
     /**
      * @brief Sets the delay time parameter in milliseconds.
      * 
-     * @param delayTimeParam delay time in milliseconds.
+     * @param delayTime delay time in milliseconds.
      */
-    void setDelayTimeParam(std::atomic<float>* delayTimeParam);
+    void setDelayTime(float delayTime);
 
     /**
      * @brief Gets the delay time parameter value in milliseconds.
@@ -44,9 +42,9 @@ public:
     /**
      * @brief Set the dry wet mix parameter.
      * 
-     * @param dryWetParam Dry/Wet mix parameter.
+     * @param dryWet Dry/Wet mix parameter.
      */
-    void setDryWetParam(std::atomic<float>* dryWetParam);
+    void setDryWet(float dryWet);
 
     /**
      * @brief Get the current dry wet mix parameter value.
@@ -76,6 +74,19 @@ public:
      */
     void reset() override;
 
+    /**
+     * @brief Registers the delay time and dry/wet parameters with the given
+     * AudioProcessorValueTreeState.
+     * 
+     * @param apvts Processor's AudioProcessorValueTreeState.
+     */
+    void registerParameters(juce::AudioProcessorValueTreeState& apvts) override;
+
+    static constexpr char DELAY_TIME_DIAL_ID[] = "DELAY_TIME"; /**< Delay time parameter ID. */
+    static constexpr char DELAY_TIME_DIAL_TEXT[] = "Delay Time (ms)"; /**< Delay time parameter text. */
+    static constexpr char DRY_WET_DIAL_ID[] = "DELAY_DRY_WET"; /**< Dry/Wet mix parameter ID. */
+    static constexpr char DRY_WET_DIAL_TEXT[] = "Delay Dry/Wet"; /**< Dry/Wet mix parameter text. */
+
 private:
     /**
      * @brief Gets the delay time as the number of samples needed to produce that delay.
@@ -87,8 +98,16 @@ private:
     juce::dsp::DelayLine<float> m_delayLine; /**< Delay line processor. */
     double m_sampleRate = 44100.0; /**< Sample rate of the audio host. */
 
-    std::atomic<float>* m_delayTime = nullptr; /** Delay time in milliseconds. */
-    std::atomic<float>* m_dryWet = nullptr; /** Dry/Wet mix parameter. */
+    ProcessorParam<
+        DELAY_TIME_DIAL_ID,
+        DELAY_TIME_DIAL_TEXT,
+        float
+    > m_delayTime; /** Delay time in milliseconds. */
+    ProcessorParam<
+        DRY_WET_DIAL_ID,
+        DRY_WET_DIAL_TEXT,
+        float
+    > m_dryWet; /** Dry/Wet mix parameter. */
 };
 
 }

@@ -3,24 +3,30 @@
 namespace glos::clcr
 {
 
-void Delay::setDelayTimeParam(std::atomic<float>* delayTime)
+Delay::Delay() :
+    m_delayTime(0.0f),
+    m_dryWet(0.5f)
 {
-    m_delayTime = delayTime;
+}
+
+void Delay::setDelayTime(float delayTime)
+{
+    m_delayTime.store(delayTime);
 }
 
 float Delay::getDelayTime() const
 {
-    return m_delayTime ? m_delayTime->load() : 0.0f;
+    return m_delayTime.load();
 }
 
-void Delay::setDryWetParam(std::atomic<float>* dryWet)
+void Delay::setDryWet(float dryWet)
 {
-    m_dryWet = dryWet;
+    m_dryWet.store(dryWet);
 }
 
 float Delay::getDryWet() const
 {
-    return m_dryWet ? m_dryWet->load() : 0.0f;
+    return m_dryWet.load();
 }
 
 void Delay::prepare (const juce::dsp::ProcessSpec& spec)
@@ -56,6 +62,12 @@ void Delay::process (const juce::dsp::ProcessContextReplacing<float>& context)
 void Delay::reset()
 {
     m_delayLine.reset();
+}
+
+void Delay::registerParameters(juce::AudioProcessorValueTreeState& apvts)
+{
+    apvts.addParameterListener(DELAY_TIME_DIAL_ID, &m_delayTime);
+    apvts.addParameterListener(DRY_WET_DIAL_ID, &m_dryWet);
 }
 
 int Delay::getDelayTimeInSamples() const

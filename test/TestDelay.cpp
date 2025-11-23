@@ -7,9 +7,9 @@ TEST(TestDelay, ProcessDelay)
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = 44100.0;
 
-    std::atomic<float> delayTime(0.5f); // 0.5 seconds delay
-    std::atomic<float> dryWet(0.3f);
-    auto delayTimeInSamples = static_cast<int>(delayTime.load() * spec.sampleRate);
+    float delayTime(0.5f); // 0.5 seconds delay
+    float dryWet(0.3f);
+    auto delayTimeInSamples = static_cast<int>(delayTime * spec.sampleRate);
 
     // make room for some samples after the delay
     spec.maximumBlockSize = delayTimeInSamples + 10; // Extra samples to accommodate delay
@@ -17,8 +17,8 @@ TEST(TestDelay, ProcessDelay)
 
     glos::clcr::Delay delay;
     
-    delay.setDelayTimeParam(&delayTime);
-    delay.setDryWetParam(&dryWet);
+    delay.setDelayTime(delayTime);
+    delay.setDryWet(dryWet);
     delay.prepare(spec);
 
     // allocate buffer using maximumBlockSize so there are samples after the delay
