@@ -3,14 +3,14 @@
 namespace glos::clcr
 {
 
-void BoxMullerNoise::setNoiseAmountParam(std::atomic<float>* noiseAmountParam) noexcept
+void BoxMullerNoise::setNoiseAmount(float noiseAmountParam) noexcept
 {
-    m_noiseAmount = noiseAmountParam;
+    m_noiseAmount.store(noiseAmountParam);
 }
 
 float BoxMullerNoise::getNoiseAmount() const noexcept
 {
-    return m_noiseAmount ? m_noiseAmount->load() : 0.0f;
+    return m_noiseAmount.load();
 }
 
 void BoxMullerNoise::prepare(const juce::dsp::ProcessSpec& spec)
@@ -34,7 +34,7 @@ void BoxMullerNoise::process(const juce::dsp::ProcessContextReplacing<float>& co
     {
         auto* channelData = block.getChannelPointer(channel);
         auto* noiseSamples = noise.getWritePointer(static_cast<int>(channel));
-        auto noiseAmount = m_noiseAmount ? m_noiseAmount->load() : 0.0f;
+        auto noiseAmount = m_noiseAmount.load();
         auto numValues = static_cast<int>(numSamples);
 
         jassert(noiseAmount >= 0.0f && noiseAmount <= 1.0f);
@@ -50,6 +50,11 @@ void BoxMullerNoise::reset()
     m_usePrecomputedSample = false;
     m_precomputedSample = 0.0f;
     m_samples.clear();
+}
+
+void BoxMullerNoise::registerParameters(juce::AudioProcessorValueTreeState& apvts)
+{
+    apvts.addParameterListener(NOISE_AMOUNT_DIAL_ID, &m_noiseAmount);
 }
 
 float BoxMullerNoise::nextSample() noexcept

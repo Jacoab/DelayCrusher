@@ -21,9 +21,9 @@ TEST(TestBoxMullerNoise, KolmogorovSmirnovTest)
     spec.numChannels = static_cast<uint32_t>(numChannels);
     spec.maximumBlockSize = numSamples;
 
-    std::atomic<float> noiseAmount(1.0f);
+    float noiseAmount(1.0f);
     glos::clcr::BoxMullerNoise noiseGenerator;
-    noiseGenerator.setNoiseAmountParam(&noiseAmount);
+    noiseGenerator.setNoiseAmount(noiseAmount);
     noiseGenerator.prepare(spec);
 
     // Process the audio block to generate noise

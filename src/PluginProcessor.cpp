@@ -72,7 +72,7 @@ void CloudCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
     bitCrusher.setBitDepthParam(m_apvts.getRawParameterValue(BIT_DEPTH_DIAL_ID));
 
     auto& noise = m_processorChain.get<NoiseIndex>();
-    noise.setNoiseAmountParam(m_apvts.getRawParameterValue(NOISE_AMOUNT_DIAL_ID));
+    noise.registerParameters(m_apvts);
 
     auto& delay = m_processorChain.get<DelayIndex>();
     delay.setDelayTimeParam(m_apvts.getRawParameterValue(DELAY_TIME_DIAL_ID));
@@ -183,8 +183,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::
     auto noiseAmountStep = 0.01f;
     auto noiseAmountDefault = noiseAmountMin;
     auto noiseAmountParam = std::make_unique<juce::AudioParameterFloat> (
-        NOISE_AMOUNT_DIAL_ID,
-        NOISE_AMOUNT_DIAL_TEXT,
+        BoxMullerNoise::NOISE_AMOUNT_DIAL_ID,
+        BoxMullerNoise::NOISE_AMOUNT_DIAL_TEXT,
         juce::NormalisableRange<float>(noiseAmountMin, noiseAmountMax, noiseAmountStep),
         noiseAmountDefault
     );
