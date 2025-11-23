@@ -21,18 +21,16 @@ TEST(TestBitCrusher, ProcessSample)
     juce::dsp::AudioBlock<float> audioBlock(audioBuffer);
     juce::dsp::ProcessContextReplacing<float> context(audioBlock);
 
-    auto sampleRateReduxHz = std::atomic<float>(22050.0f);
-    auto bitDepth = std::atomic<float>(8.0f);
-    auto sampleRateReduxPtr = &sampleRateReduxHz;
-    auto bitDepthPtr = &bitDepth;
+    auto sampleRateRedux = 22050.0f;
+    auto bitDepth = 8.0f;
 
     glos::clcr::BitCrusher bitCrusher{};
-    bitCrusher.setSampleRateReduxParam(sampleRateReduxPtr);
-    bitCrusher.setBitDepthParam(bitDepthPtr);
+    bitCrusher.setSampleRateRedux(sampleRateRedux);
+    bitCrusher.setBitDepth(bitDepth);
 
     bitCrusher.process(context);
 
-    int holdInterval = static_cast<int>(sampleRate / sampleRateReduxHz + 0.5f);
+    int holdInterval = static_cast<int>(sampleRate / sampleRateRedux + 0.5f);
 
     auto& block = context.getOutputBlock();
     auto* processedChannelData = block.getChannelPointer(0);

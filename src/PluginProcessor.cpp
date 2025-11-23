@@ -67,9 +67,7 @@ void CloudCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
     );
 
     auto& bitCrusher = m_processorChain.get<BitCrusherIndex>();
-
-    bitCrusher.setSampleRateReduxParam(m_apvts.getRawParameterValue(SAMPLE_RATE_REDUX_DIAL_ID));
-    bitCrusher.setBitDepthParam(m_apvts.getRawParameterValue(BIT_DEPTH_DIAL_ID));
+    bitCrusher.registerParameters(m_apvts);
 
     auto& noise = m_processorChain.get<NoiseIndex>();
     noise.registerParameters(m_apvts);
@@ -161,8 +159,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::
     auto bitDepthStep = 1.0f;
     auto bitDepthDefault = bitDepthMax;
     auto bitDepthParam = std::make_unique<juce::AudioParameterFloat> (
-        BIT_DEPTH_DIAL_ID,
-        BIT_DEPTH_DIAL_TEXT,
+        BitCrusher::BIT_DEPTH_DIAL_ID,
+        BitCrusher::BIT_DEPTH_DIAL_TEXT,
         juce::NormalisableRange<float>(bitDepthMin, bitDepthMax, bitDepthStep),
         bitDepthDefault
     );
@@ -172,8 +170,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::
     auto sampleRateReduxStep = 1.0f;
     auto sampleRateReduxDefault = sampleRateReduxMin;
     auto sampleRateReduxParam = std::make_unique<juce::AudioParameterFloat> (
-        SAMPLE_RATE_REDUX_DIAL_ID,
-        SAMPLE_RATE_REDUX_DIAL_TEXT,
+        BitCrusher::SAMPLE_RATE_REDUX_DIAL_ID,
+        BitCrusher::SAMPLE_RATE_REDUX_DIAL_TEXT,
         juce::NormalisableRange<float>(sampleRateReduxMin, sampleRateReduxMax, sampleRateReduxStep),
         sampleRateReduxDefault
     );

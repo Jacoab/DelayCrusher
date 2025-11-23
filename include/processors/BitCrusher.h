@@ -8,14 +8,11 @@
 
 #include "concepts/NoiseGenType.h"
 #include "processors/BoxMullerNoise.h"
+#include "processors/SynchronizedProcessor.h"
+#include "ProcessorParam.h"
 
 namespace glos::clcr 
 {
-
-constexpr std::string SAMPLE_RATE_REDUX_DIAL_ID = "SAMPLE_RATE_REDUX";
-constexpr std::string SAMPLE_RATE_REDUX_DIAL_TEXT = "Sample Rate Reduction";
-constexpr std::string BIT_DEPTH_DIAL_ID = "BIT_DEPTH";
-constexpr std::string BIT_DEPTH_DIAL_TEXT = "Bit Depth";
 
 /**
  * @brief Bit crusher audio effect that reduces the sample rate and bit depth of an audio signal.
@@ -23,7 +20,7 @@ constexpr std::string BIT_DEPTH_DIAL_TEXT = "Bit Depth";
  * 
  * @tparam NoiseGen Provides noise samples that can be added to the processed signal.
  */
-class BitCrusher : public juce::dsp::ProcessorBase
+class BitCrusher : public SynchronizedProcessor
 {
 public:
     /**
@@ -31,14 +28,14 @@ public:
      * 
      * Initializes with a sample rate reduction of 0, a bit depth of 32, and a noise amount of 0.
      */
-    BitCrusher() = default;
+    BitCrusher();
 
     /**
      * @brief Set the sample rate reduction parameter.
      * 
-     * @param sampleRateRedux Sample rate reduction parameter
+     * @param sampleRateRedux Sample rate reduction
      */
-    void setSampleRateReduxParam(std::atomic<float>* sampleRateReduxParam) noexcept;
+    void setSampleRateRedux(float sampleRateRedux) noexcept;
 
     /**
      * @brief Get the sample rate reduction of the bit crusher.
@@ -50,9 +47,9 @@ public:
     /**
      * @brief Set parameter representing the number of bits used to represent each sample after processing.
      * 
-     * @param bitDepthParam Paremeter for the number of bits used to represent each sample after processing.
+     * @param bitDepth Number of bits used to represent each sample after processing.
      */
-    void setBitDepthParam(std::atomic<float>* bitDepthParam) noexcept;
+    void setBitDepth(float bitDepth) noexcept;
 
     /**
      * @brief Get the number of bits used to represent each sample after processing.
@@ -82,6 +79,18 @@ public:
      */
     void reset() override;
 
+    /**
+     * @brief Register the processor parameter listeners with the given AudioProcessorValueTreeState.
+     * 
+     * @param apvts 
+     */
+    void registerParameters(juce::AudioProcessorValueTreeState& apvts) override;
+
+    static constexpr char SAMPLE_RATE_REDUX_DIAL_ID[] = "SAMPLE_RATE_REDUX"; /**< Parameter ID for sample rate reduction dial */
+    static constexpr char SAMPLE_RATE_REDUX_DIAL_TEXT[] = "Sample Rate Reduction"; /**< Parameter text for sample rate reduction dial */
+    static constexpr char BIT_DEPTH_DIAL_ID[] = "BIT_DEPTH"; /**< Parameter ID for bit depth dial */
+    static constexpr char BIT_DEPTH_DIAL_TEXT[] = "Bit Depth"; /**< Parameter text for bit depth dial */
+
 private:
     /**
      * @brief Quantize the sample to the specified bit depth.
@@ -93,8 +102,16 @@ private:
 
     float m_heldSample = 0.0f; /**< Current sample that is held and re-used for m_sampleRateRedux iterations */
 
-    std::atomic<float>* m_sampleRateRedux; /**< Amount the sample rate will be reduced by */
-    std::atomic<float>* m_bitDepth; /**< Number of bits used to represent each sample after processing */
+    ProcessorParam<
+        SAMPLE_RATE_REDUX_DIAL_ID,
+        SAMPLE_RATE_REDUX_DIAL_TEXT,
+        float
+    > m_sampleRateRedux; /**< Amount the sample rate will be reduced by */
+    ProcessorParam<
+        BIT_DEPTH_DIAL_ID,
+        BIT_DEPTH_DIAL_TEXT,
+        float
+    > m_bitDepth; /**< Number of bits used to represent each sample after processing */
 };
 
 } // namespace glos::clcr

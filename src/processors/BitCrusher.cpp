@@ -3,24 +3,30 @@
 namespace glos::clcr 
 {
 
-void BitCrusher::setSampleRateReduxParam(std::atomic<float>* sampleRateRedux) noexcept
+BitCrusher::BitCrusher() :
+    m_sampleRateRedux(0.0f),
+    m_bitDepth(32.0f)
 {
-    m_sampleRateRedux = sampleRateRedux;
+}
+
+void BitCrusher::setSampleRateRedux(float sampleRateRedux) noexcept
+{
+    m_sampleRateRedux.store(sampleRateRedux);
 }
 
 float BitCrusher::getSampleRateRedux() const noexcept
 {
-    return m_sampleRateRedux ? m_sampleRateRedux->load() : 0.0f;
+    return m_sampleRateRedux.load();
 }
 
-void BitCrusher::setBitDepthParam(std::atomic<float>* bitDepthParam) noexcept
+void BitCrusher::setBitDepth(float bitDepthParam) noexcept
 {
-    m_bitDepth = bitDepthParam;
+    m_bitDepth.store(bitDepthParam);
 }
 
 float BitCrusher::getBitDepth() const noexcept
 {
-    return m_bitDepth ? m_bitDepth->load() : 32.0f;
+    return m_bitDepth.load();
 }
 
 void BitCrusher::prepare (const juce::dsp::ProcessSpec& spec)
@@ -34,7 +40,7 @@ void BitCrusher::process (const juce::dsp::ProcessContextReplacing<float>& conte
     auto numChannels = block.getNumChannels();
     auto numSamples = block.getNumSamples();
 
-    auto redux = static_cast<int>(m_sampleRateRedux->load());
+    auto redux = static_cast<int>(m_sampleRateRedux.load());
     for (std::size_t channel = 0; channel < numChannels; ++channel)
     {
         auto* samples = block.getChannelPointer(channel);
@@ -54,9 +60,15 @@ void BitCrusher::reset()
     m_heldSample = 0.0f;
 }
 
+void BitCrusher::registerParameters(juce::AudioProcessorValueTreeState& apvts)
+{
+    apvts.addParameterListener(SAMPLE_RATE_REDUX_DIAL_ID, &m_sampleRateRedux);
+    apvts.addParameterListener(BIT_DEPTH_DIAL_ID, &m_bitDepth);
+}
+
 float BitCrusher::quantize(float sample) const
 {
-    float scale = powf(2.0f, m_bitDepth->load());
+    float scale = powf(2.0f, m_bitDepth.load());
     return std::floor(sample * scale) / scale;
 }
 

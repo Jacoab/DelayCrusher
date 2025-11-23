@@ -6,8 +6,8 @@ namespace glos::clcr
 CloudCrusherAudioProcessorEditor::CloudCrusherAudioProcessorEditor (CloudCrusherAudioProcessor& p) : 
     AudioProcessorEditor (&p), 
     m_audioProcessor (p),
-    m_sampleRateReduxDial(SAMPLE_RATE_REDUX_DIAL_TEXT, m_audioProcessor.getAPVTS(), SAMPLE_RATE_REDUX_DIAL_ID),
-    m_bitDepthDial(BIT_DEPTH_DIAL_TEXT, m_audioProcessor.getAPVTS(), BIT_DEPTH_DIAL_ID),
+    m_sampleRateReduxDial(BitCrusher::SAMPLE_RATE_REDUX_DIAL_TEXT, m_audioProcessor.getAPVTS(), BitCrusher::SAMPLE_RATE_REDUX_DIAL_ID),
+    m_bitDepthDial(BitCrusher::BIT_DEPTH_DIAL_TEXT, m_audioProcessor.getAPVTS(), BitCrusher::BIT_DEPTH_DIAL_ID),
     m_noiseAmountDial(BoxMullerNoise::NOISE_AMOUNT_DIAL_ID, m_audioProcessor.getAPVTS(), BoxMullerNoise::NOISE_AMOUNT_DIAL_ID),
     m_delayTimeDial(DELAY_TIME_DIAL_TEXT, m_audioProcessor.getAPVTS(), DELAY_TIME_DIAL_ID),
     m_delayDryWetDial(DELAY_DRY_WET_DIAL_TEXT, m_audioProcessor.getAPVTS(), DELAY_DRY_WET_DIAL_ID)
