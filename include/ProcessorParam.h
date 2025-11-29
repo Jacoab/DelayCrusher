@@ -21,7 +21,8 @@ template<class T> concept Numeric = std::is_arithmetic_v<T>;
 
 /**
  * @struct ProcessorParam
- * @brief Template struct to represent a processor parameter synchronized with JUCE AudioProcessorValueTreeState.
+ * @brief Template struct to represent a processor parameter synchronized 
+ * with JUCE AudioProcessorValueTreeState.
  * 
  * @tparam id The unique identifier for the parameter.
  * @tparam name The user-facing name of the parameter.
@@ -35,7 +36,12 @@ template <
 class ProcessorParam : public juce::AudioProcessorValueTreeState::Listener
 {
 public:
-    ProcessorParam(ParamType initialValue) : 
+    /**
+     * @brief Construct a new ProcessorParam object.
+     * 
+     * @param initialValue Initial value for the parameter.
+     */
+    explicit ProcessorParam(ParamType initialValue) : 
         m_value(initialValue) 
     {
     }

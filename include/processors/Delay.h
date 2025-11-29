@@ -26,30 +26,32 @@ public:
     Delay();
 
     /**
-     * @brief Sets the delay time parameter in milliseconds.
+     * @brief Sets the delay time in milliseconds.
      * 
      * @param delayTime delay time in milliseconds.
      */
     void setDelayTime(float delayTime);
 
     /**
-     * @brief Gets the delay time parameter value in milliseconds.
+     * @brief Gets the delay time in milliseconds.
      * 
-     * @return float delay time parameter value in milliseconds.
+     * @return delay time in milliseconds.
      */
     float getDelayTime() const;
 
     /**
-     * @brief Set the dry wet mix parameter.
+     * @brief Set the dry wet mix as the percentage of delay to add
+     * to the signal.
      * 
-     * @param dryWet Dry/Wet mix parameter.
+     * @param dryWet Dry/Wet mix.
      */
     void setDryWet(float dryWet);
 
     /**
-     * @brief Get the current dry wet mix parameter value.
+     * @brief Get the dry wet mix value as the percentage of delay to
+     * add to the signal.
      * 
-     * @return float Current dry wet mix parameter value.
+     * @return Dry/Wet mix.
      */
     float getDryWet() const;
 
@@ -61,9 +63,10 @@ public:
     void prepare (const juce::dsp::ProcessSpec& spec) override;
     
     /**
-     * @brief Takes the audio context and processes incoming audio with the delay effect.
-     * The samples in the audio context output block are pushed onto the delay line and
-     * the delayed samples are popped from the delay line and mixed with the input samples.
+     * @brief Takes the audio context and processes incoming audio signal with the delay 
+     * effect. The samples in the audio context output block are pushed onto the delay 
+     * line and the delayed samples are popped from the delay line and added to the 
+     * incoming audio signal.
      * 
      * @param context Context information containing input and output audio blocks.
      */
@@ -91,7 +94,7 @@ private:
     /**
      * @brief Gets the delay time as the number of samples needed to produce that delay.
      * 
-     * @return int delay time in samples.
+     * @return delay time in samples.
      */
     int getDelayTimeInSamples() const;
 

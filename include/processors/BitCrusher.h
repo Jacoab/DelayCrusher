@@ -16,7 +16,10 @@ namespace glos::clcr
 
 /**
  * @brief Bit crusher audio effect that reduces the sample rate and bit depth of an audio signal.
- * This effect can be used as a JUCE DSP processor in an audio processing chain.
+ * This effect is a SynchronizedProcessor based class that will take an incoming
+ * audio signal in a juce::ProcessorChain and reduce the sample rate by holding samples for a 
+ * specified number of iterations and reduce the bit depth by quantizing the samples to a 
+ * specified number of bits.
  * 
  * @tparam NoiseGen Provides noise samples that can be added to the processed signal.
  */
@@ -31,7 +34,7 @@ public:
     BitCrusher();
 
     /**
-     * @brief Set the sample rate reduction parameter.
+     * @brief Set the sample rate reduction.
      * 
      * @param sampleRateRedux Sample rate reduction
      */
@@ -40,12 +43,12 @@ public:
     /**
      * @brief Get the sample rate reduction of the bit crusher.
      * 
-     * @return float Sample rate reduction.
+     * @return Sample rate reduction.
      */
     float getSampleRateRedux() const noexcept;
 
     /**
-     * @brief Set parameter representing the number of bits used to represent each sample after processing.
+     * @brief Set the number of bits used to represent each sample after processing.
      * 
      * @param bitDepth Number of bits used to represent each sample after processing.
      */
@@ -54,7 +57,7 @@ public:
     /**
      * @brief Get the number of bits used to represent each sample after processing.
      * 
-     * @return float The number of bits used to represent each sample after processing.
+     * @return The number of bits used to represent each sample after processing.
      */
     float getBitDepth() const noexcept;
 
@@ -96,7 +99,7 @@ private:
      * @brief Quantize the sample to the specified bit depth.
      * 
      * @param sample Sample to be quantized.
-     * @return float Quantized sample.
+     * @return Quantized sample.
      */
     float quantize(float sample) const;
 

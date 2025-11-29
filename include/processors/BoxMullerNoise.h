@@ -13,6 +13,8 @@ namespace glos::clcr
 /**
  * @class BoxMullerNoise
  * @brief Gaussian white noise generator using the Box-Muller transform.
+ * This effect is a SynchronizedProcessor based class that will take an incoming
+ * audio signal in a juce::ProcessorChain and dither the signal with noise.
  * 
  */
 class BoxMullerNoise : public SynchronizedProcessor
@@ -29,29 +31,29 @@ public:
     }
 
     /**
-     * @brief Set the noise amount parameter.
+     * @brief Set the noise amount by percentage of noise to add to the signal.
      * 
      * @param noiseAmount Amount of noise to add to the signal [0.0, 1.0]
      */
     void setNoiseAmount(float noiseAmount) noexcept;
 
     /**
-     * @brief Get the current noise amount value
+     * @brief Get the noise amount
      * 
-     * @return float Noise amount value
+     * @return Noise amount value
      */
     float getNoiseAmount() const noexcept;
 
     /**
-     * @brief Sets the number of channels to generate noise for and the sample rate.
+     * @brief Sets the sample rate and number of channels to generate noise for.
      * 
      * @param spec Process specification containing audio host info.
      */
     void prepare(const juce::dsp::ProcessSpec& spec) override;
     
     /**
-     * @brief Process the audio context by dithering in the incoming audio sample buffer
-     * with noise.
+     * @brief Process the audio context by adding noise to the incoming 
+     * audio sample buffer.
      * 
      * @param context Context information containing input and output audio blocks.
      */
