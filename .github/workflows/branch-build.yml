@@ -6,8 +6,8 @@ on:
 
 env:
   PROJECT_NAME: CloudCrusher
+  VST3_ARCHIVE: CloudCrusher.vst3.tar.gz
   VST3_DIR: ./build/CloudCrusher_artefacts/Release/VST3/CloudCrusher.vst3
-  VST3_ARCHIVE: CloudCrusher.tar.gz
 
 jobs:
   build:
@@ -19,10 +19,13 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install Xcode Command Line Tools
+        run: xcode-select --install || true
+
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v1
         with:
-          cmake-version: '3.16'
+          cmake-version: '3.24'
 
       - name: Configure project
         run: cmake -B build -S . -G Xcode -DCMAKE_BUILD_TYPE=Release
@@ -34,10 +37,10 @@ jobs:
         run: ctest --test-dir build -C Release -V
 
       - name: Create plugin archive
-        run: tar -czf ${{ env.VST3_ARCHIVE }} ${{ env.VST3_DIR }}
+        run: tar -czf ${{ env.PROJECT_NAME }}.tar.gz ${{ env.VST3_ARCHIVE }}
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.PROJECT_NAME }}-${{ github.sha }}
           path: ${{ env.VST3_ARCHIVE }}
