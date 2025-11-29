@@ -37,7 +37,7 @@ jobs:
         run: ctest --test-dir build -C Release -V
 
       - name: Create plugin archive
-        run: tar -czf ${{ env.PROJECT_NAME }}.tar.gz ${{ env.VST3_ARCHIVE }}
+        run: tar -czf ${{ env.VST3_ARCHIVE }}.tar.gz ${{ env.VST3_DIR}}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
