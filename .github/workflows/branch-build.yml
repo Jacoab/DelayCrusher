@@ -6,7 +6,6 @@ on:
 
 env:
   PROJECT_NAME: CloudCrusher
-  VST3_ARCHIVE: CloudCrusher.vst3.tar.gz
   VST3_DIR: ./build/CloudCrusher_artefacts/Release/VST3/CloudCrusher.vst3
 
 jobs:
@@ -41,12 +40,9 @@ jobs:
       - name: Run unit tests
         run: ctest --test-dir build -C Release -V
 
-      - name: Create plugin archive
-        run: tar -czf ${{ env.VST3_ARCHIVE }} ${{ env.VST3_DIR}}
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PROJECT_NAME }}-${{ github.sha }}
-          path: ${{ env.VST3_ARCHIVE }}
+          path: ${{ env.VST3_DIR }}
           retention-days: 7
