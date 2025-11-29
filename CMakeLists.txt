@@ -5,7 +5,7 @@ cmake_policy(SET CMP0135 NEW)
 # Project setup and configuration
 #
 set(PROJECT_NAME "CloudCrusher")
-set(PROJECT_VERSION 0.2.0)
+set(PROJECT_VERSION 1.0.0)
 
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION})
 
@@ -58,14 +58,14 @@ juce_add_plugin(${PROJECT_NAME}
     PRODUCT_NAME ${PROJECT_NAME}
 )
 
-# Make template headers available to all targets
+#
+# Create the main plugin target
+#
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include/components
     ${CMAKE_CURRENT_SOURCE_DIR}/include/processors
 )
-
-# Create the main plugin target
 target_sources(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCES}
 )
@@ -87,7 +87,9 @@ target_link_libraries(${PROJECT_NAME}
         juce::juce_recommended_warning_flags
 )
 
+#
 # Create plugin test target
+#
 if(BUILD_TESTING)
     enable_testing()
     add_test(
@@ -97,7 +99,6 @@ if(BUILD_TESTING)
     )
 endif()
 
-# Replace existing gtest_discover_tests with:
 add_executable(${PROJECT_NAME}Test
     ${PROJECT_SOURCES}
     test/utils/ConstNoise.cpp
