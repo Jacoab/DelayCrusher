@@ -6,7 +6,7 @@ on:
 
 env:
   PROJECT_NAME: CloudCrusher
-  VST3_DIR: ./build/CloudCrusher_artefacts/Release/VST3/CloudCrusher.vst3
+  VST3_DIR: ./build/CloudCrusher_artefacts/Release/VST3
 
 jobs:
   build:
