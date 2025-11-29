@@ -40,7 +40,7 @@ jobs:
         run: tar -czf ${{ env.PROJECT_NAME }}.tar.gz ${{ env.VST3_ARCHIVE }}
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PROJECT_NAME }}-${{ github.sha }}
           path: ${{ env.VST3_ARCHIVE }}
