@@ -93,10 +93,37 @@ target_link_libraries(${PROJECT_NAME}
 if(BUILD_TESTING)
     enable_testing()
     add_test(
-        NAME ${PROJECT_NAME}Tests
-        COMMAND ${PROJECT_NAME}Test
+        NAME TestBitCrusher
+        COMMAND ${PROJECT_NAME}Test --gtest_filter=TestBitCrusher.*
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     )
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        add_test(
+            NAME TestBoxMullerNoise
+            COMMAND ${PROJECT_NAME}Test --gtest_filter=TestBoxMullerNoise.*
+            WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        )
+    endif()
+
+    add_test(
+        NAME TestDelay
+        COMMAND ${PROJECT_NAME}Test --gtest_filter=TestDelay.*
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    )
+
+    add_test(
+        NAME TestPluginProcessor
+        COMMAND ${PROJECT_NAME}Test --gtest_filter=TestPluginProcessor.*
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    )
+
+    add_test(
+        NAME TestProcessorParam
+        COMMAND ${PROJECT_NAME}Test --gtest_filter=TestProcessorParam.*
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    )
+    
 endif()
 
 add_executable(${PROJECT_NAME}Test
