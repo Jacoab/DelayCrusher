@@ -6,6 +6,7 @@ on:
 
 env:
   PROJECT_NAME: CloudCrusher
+  PROJECT_VERSION: 1.0.0
   VST3_DIR: ./build/CloudCrusher_artefacts/Release/VST3
 
 jobs:
@@ -43,6 +44,6 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PROJECT_NAME }}-${{ github.sha }}
+          name: ${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}-${{ github.ref_name }}
           path: ${{ env.VST3_DIR }}
           retention-days: 7
