@@ -35,9 +35,11 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Initialize submodules
-        run: |
-          git submodule update --init --recursive
+      - name: "(JUCE) Clone Repository"
+        uses: actions/checkout@v3
+        with:
+          repository: juce-framework/JUCE
+          path: ${{ runner.workspace }}/${{ env.PROJECT_NAME }}/JUCE
 
       - name: Install Xcode Command Line Tools
         run: xcode-select --install || true
