@@ -13,6 +13,7 @@ env:
 jobs:
   create-release:
     runs-on: macos-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -43,17 +44,13 @@ jobs:
         run: ctest --test-dir build -C Release -V
 
       - name: Package release
-        run: git archive --format=zip --output ./CloudCrusher.zip main
+        run: zip -r ./CloudCrusher.zip ${{ env.VST3_DIR }}
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ./CloudCrusher.zip
-          tag_name: ${{ env.PROJECT_VERSION }}
-          name: ${{ env.PROJECT_NAME}}-${{ env.PROJECT_VERSION }}
-          body: |
-            CloudCrusher VST3 plugin release version ${{ env.PROJECT_NAME }}
-            
-            This package contains the compiled VST3 plugin for macOS.
+      - name: Create GitHub release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+        run: >-
+          gh release create v${{ env.PROJECT_VERSION }}
+          "CloudCrusher.zip#Cloud Crusher VST3"
+          --generate-notes
+          --title "Version ${{ github.ref_name }} (or some other name)"
