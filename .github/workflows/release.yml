@@ -46,8 +46,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ env.VST3_DIR}}
-          tag_name: ${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}
-          name: ${{ env.PROJECT_NAME}} ${{ env.PROJECT_VERSION }}
+          tag_name: ${{ env.PROJECT_VERSION }}
+          name: ${{ env.PROJECT_NAME}}-${{ env.PROJECT_VERSION }}
           body: |
             CloudCrusher VST3 plugin release version ${{ env.PROJECT_NAME }}
             
