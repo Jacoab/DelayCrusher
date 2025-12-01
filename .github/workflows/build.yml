@@ -1,0 +1,57 @@
+name: Build and Test
+
+on:
+  workflow_call:
+    outputs:
+      project_name:
+        description: "Project name"
+        value: ${{ jobs.build.outputs.project_name }}
+      project_version:
+        description: "Project version"
+        value: ${{ jobs.build.outputs.project_version }}
+      vst3_dir:
+        description: "VST3 directory path"
+        value: ${{ jobs.build.outputs.vst3_dir }}
+
+env:
+  PROJECT_NAME: CloudCrusher
+  PROJECT_VERSION: 1.0.0
+  VST3_DIR: ./build/CloudCrusher_artefacts/Release/VST3
+
+jobs:
+  build:
+    runs-on: macos-latest
+    env:
+      PROJECT_NAME: CloudCrusher
+      VST3_DIR: ./build/CloudCrusher_artefacts/Release/VST3
+    outputs:
+      project_name: ${{ env.PROJECT_NAME }}
+      project_version: ${{ env.PROJECT_VERSION }}
+      vst3_dir: ${{ env.VST3_DIR }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Initialize submodules
+        run: |
+          git submodule update --init --recursive
+
+      - name: Install Xcode Command Line Tools
+        run: xcode-select --install || true
+
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v1
+        with:
+          cmake-version: '3.24'
+
+      - name: Configure project
+        run: cmake -B build -S . -G Xcode -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build project
+        run: cmake --build ./build --config Release
+
+      - name: Run unit tests
+        run: ctest --test-dir build -C Release -V

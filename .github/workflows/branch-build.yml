@@ -2,48 +2,21 @@ name: Branch Build
 
 on:
   push:
-    branches: [ main, develop, '**' ]
-
-env:
-  PROJECT_NAME: CloudCrusher
-  PROJECT_VERSION: 1.0.0
-  VST3_DIR: ./build/CloudCrusher_artefacts/Release/VST3
+    branches:
+      - '**'
+      - '!main'
 
 jobs:
-  build:
+  build-and-test:
+    uses: ./.github/workflows/build.yml
+
+  upload-artifact:
+    needs: build-and-test
     runs-on: macos-latest
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Install Xcode Command Line Tools
-        run: xcode-select --install || true
-
-      - name: "(JUCE) Clone Repository"
-        uses: actions/checkout@v3
-        with:
-          repository: juce-framework/JUCE
-          path: ${{ runner.workspace }}/${{ env.PROJECT_NAME }}/JUCE
-
-      - name: Set up CMake
-        uses: jwlawson/actions-setup-cmake@v1
-        with:
-          cmake-version: '3.24'
-
-      - name: Build project
-        run: |
-          cmake -B build -S . -G Xcode -DCMAKE_BUILD_TYPE=Release
-          cmake --build ./build --config Release
-
-      - name: Run unit tests
-        run: ctest --test-dir build -C Release -V
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}-${{ github.ref_name }}
-          path: ${{ env.VST3_DIR }}
+          name: ${{ needs.build-and-test.outputs.project_name }}-${{ needs.build-and-test.outputs.project_version }}-${{ github.ref_name }}
+          path: ${{ needs.build-and-test.outputs.vst3_dir }}
           retention-days: 7

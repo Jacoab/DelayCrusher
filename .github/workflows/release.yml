@@ -1,0 +1,27 @@
+name: Release Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/build.yml
+
+  create-release:
+    needs: build-and-test
+    runs-on: macos-latest
+    steps:
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ needs.build-and-test.outputs.vst3_dir }}
+          tag_name: ${{ needs.build-and-test.outputs.project_name }}-${{ needs.build-and-test.outputs.project_version }}
+          name: ${{ needs.build-and-test.outputs.project_name }} ${{ needs.build-and-test.outputs.project_version }}
+          body: |
+            CloudCrusher VST3 plugin release version ${{ needs.build-and-test.outputs.project_version }}
+            
+            This package contains the compiled VST3 plugin for macOS.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
