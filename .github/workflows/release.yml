@@ -44,13 +44,17 @@ jobs:
         run: ctest --test-dir build -C Release -V
 
       - name: Package release
-        run: zip -r ./CloudCrusher.zip ${{ env.VST3_DIR }}
+        run: |
+          cd ${{ env.VST3_DIR }}
+          zip -r ./${{ env.PROJECT_NAME }}.zip ${{ env.PROJECT_NAME }}.vst3
+          mv CloudCrusher.zip ${{ github.workspace }}
+          cd ${{ github.workspace }}
 
       - name: Create GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
         run: >-
           gh release create v${{ env.PROJECT_VERSION }}
-          "CloudCrusher.zip#Cloud Crusher VST3"
+          "CloudCrusher-v${{ env.PROJECT_VERSION }}.zip"
           --generate-notes
-          --title "Version ${{ github.ref_name }} (or some other name)"
+          --title "Cloud Crusher v${{ env.PROJECT_VERSION }}"
