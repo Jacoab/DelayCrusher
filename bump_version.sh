@@ -61,10 +61,16 @@ echo "Bumping version: $CURRENT_VERSION -> $NEW_VERSION"
 sed -i '' "s/set(PROJECT_VERSION $CURRENT_VERSION)/set(PROJECT_VERSION $NEW_VERSION)/" CMakeLists.txt
 echo "✓ Updated CMakeLists.txt"
 
-# Update build.yml if it exists
-if [ -f ".github/workflows/build.yml" ]; then
-    sed -i '' "s/PROJECT_VERSION: $CURRENT_VERSION/PROJECT_VERSION: $NEW_VERSION/" .github/workflows/build.yml
-    echo "✓ Updated .github/workflows/build.yml"
+# Update branch-build.yml if it exists
+if [ -f ".github/workflows/branch-build.yml" ]; then
+    sed -i '' "s/PROJECT_VERSION: $CURRENT_VERSION/PROJECT_VERSION: $NEW_VERSION/" .github/workflows/branch-build.yml
+    echo "✓ Updated .github/workflows/branch-build.yml"
+fi
+
+# Update release.yml if it exists
+if [ -f ".github/workflows/release.yml" ]; then
+    sed -i '' "s/PROJECT_VERSION: $CURRENT_VERSION/PROJECT_VERSION: $NEW_VERSION/" .github/workflows/release.yml
+    echo "✓ Updated .github/workflows/release.yml"
 fi
 
 echo "Version bump complete: $NEW_VERSION"
