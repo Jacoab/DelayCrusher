@@ -46,6 +46,6 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}-${{ github.ref_name }}
-          path: ./artifacts
+          name: ${{ env.PROJECT_NAME }}-${{ github.sha }}
+          path: ${{ env.VST3_DIR }}
           retention-days: 7
