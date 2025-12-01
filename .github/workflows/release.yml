@@ -5,27 +5,51 @@ on:
     branches:
       - main
 
-jobs:
-  build-and-test:
-    uses: ./.github/workflows/build.yml
+env:
+  PROJECT_NAME: CloudCrusher
+  PROJECT_VERSION: 1.0.0
+  VST3_DIR: ./build/CloudCrusher_artefacts/Release/VST3
 
+jobs:
   create-release:
-    needs: build-and-test
     runs-on: macos-latest
     steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
         with:
-          path: ./artifacts
+          submodules: recursive
+
+      - name: "(JUCE) Clone Repository"
+        uses: actions/checkout@v3
+        with:
+          repository: juce-framework/JUCE
+          path: ${{ runner.workspace }}/${{ env.PROJECT_NAME }}/JUCE
+
+      - name: Install Xcode Command Line Tools
+        run: xcode-select --install || true
+
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v1
+        with:
+          cmake-version: '3.24'
+
+      - name: Configure project
+        run: cmake -B build -S . -G Xcode -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build project
+        run: cmake --build ./build --config Release
+
+      - name: Run unit tests
+        run: ctest --test-dir build -C Release -V
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ needs.build-and-test.outputs.vst3_dir }}
-          tag_name: ${{ needs.build-and-test.outputs.project_name }}-${{ needs.build-and-test.outputs.project_version }}
-          name: ${{ needs.build-and-test.outputs.project_name }} ${{ needs.build-and-test.outputs.project_version }}
+          files: ${{ env.VST3_DIR}}
+          tag_name: ${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}
+          name: ${{ env.PROJECT_NAME}} ${{ env.PROJECT_VERSION }}
           body: |
-            CloudCrusher VST3 plugin release version ${{ needs.build-and-test.outputs.project_version }}
+            CloudCrusher VST3 plugin release version ${{ env.PROJECT_NAME }}
             
             This package contains the compiled VST3 plugin for macOS.
         env:
