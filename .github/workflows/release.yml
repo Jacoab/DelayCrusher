@@ -42,10 +42,13 @@ jobs:
       - name: Run unit tests
         run: ctest --test-dir build -C Release -V
 
+      - name: Package release
+        run: git archive --format=zip --output ./CloudCrusher.zip main
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ env.VST3_DIR}}
+          files: ./CloudCrusher.zip
           tag_name: ${{ env.PROJECT_VERSION }}
           name: ${{ env.PROJECT_NAME}}-${{ env.PROJECT_VERSION }}
           body: |
