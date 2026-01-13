@@ -98,9 +98,13 @@ private:
      */
     int getDelayTimeInSamples() const;
 
-    juce::dsp::DelayLine<float> m_delayLine; /**< Delay line processor. */
+    juce::dsp::DelayLine<
+        float, 
+        juce::dsp::DelayLineInterpolationTypes::Lagrange3rd
+    > m_delayLine; /**< Delay line processor. */
     double m_sampleRate = 44100.0; /**< Sample rate of the audio host. */
 
+    juce::SmoothedValue<float> m_smoothedDelayTime; /**< Interpolated delay time. */
     ProcessorParam<
         DELAY_TIME_DIAL_ID,
         DELAY_TIME_DIAL_TEXT,
