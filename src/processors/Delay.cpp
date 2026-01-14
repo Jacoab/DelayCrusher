@@ -3,7 +3,7 @@
 namespace glos::clcr
 {
 
-Delay::Delay() :
+Delay::Delay() : 
     m_delayTime(0.0f),
     m_dryWet(0.5f)
 {
@@ -12,6 +12,10 @@ Delay::Delay() :
 void Delay::setDelayTime(float delayTime)
 {
     m_delayTime.store(delayTime);
+    if (m_delayLine1Active)
+        m_delayLine2.setDelay(delayTime);
+    else
+        m_delayLine1.setDelay(delayTime);
 }
 
 float Delay::getDelayTime() const
@@ -29,20 +33,22 @@ float Delay::getDryWet() const
     return m_dryWet.load();
 }
 
-void Delay::prepare (const juce::dsp::ProcessSpec& spec)
+void Delay::prepare(const juce::dsp::ProcessSpec &spec)
 {
     m_sampleRate = spec.sampleRate;
 
-    m_delayLine.prepare(spec);
-    m_delayLine.setMaximumDelayInSamples(static_cast<int>(20.0 * m_sampleRate)); // 20 second max delay
+    m_delayLine1.prepare(spec);
+    m_delayLine1.setMaximumDelayInSamples(static_cast<int>(20.0 * m_sampleRate));
+    m_delayLine1.setDelay(getDelayTimeInSamples());
 
-    m_smoothedDelayTime.reset(m_sampleRate, 0.05); // 50ms
-    m_smoothedDelayTime.setCurrentAndTargetValue(static_cast<float>(getDelayTimeInSamples()));
+    m_delayLine2.prepare(spec);
+    m_delayLine2.setMaximumDelayInSamples(static_cast<int>(20.0 * m_sampleRate));
+    m_delayLine2.setDelay(getDelayTimeInSamples());
 }
-    
-void Delay::process (const juce::dsp::ProcessContextReplacing<float>& context)
+
+void Delay::process(const juce::dsp::ProcessContextReplacing<float> &context)
 {
-    auto& block = context.getOutputBlock();
+    auto &block = context.getOutputBlock();
     auto numChannels = block.getNumChannels();
     auto numSamples = block.getNumSamples();
 
@@ -58,9 +64,20 @@ void Delay::process (const juce::dsp::ProcessContextReplacing<float>& context)
             auto* channelData = block.getChannelPointer(channel);
             auto inputSample = channelData[sample];
 
-            m_delayLine.pushSample(static_cast<int>(channel), inputSample);
-            auto outputSample = m_delayLine.popSample(static_cast<int>(channel), currentDelayTimeSamples);
-            
+            std::unique_lock<std::mutex> lock(m_DelayLineMutex);
+            float outputSample = 0.0f;
+            if (m_delayLine1Active)
+            {
+                m_delayLine1.pushSample(static_cast<int>(channel), inputSample);
+                outputSample = m_delayLine1.popSample(static_cast<int>(channel), currentDelayTimeSamples, true);
+            }
+            else
+            {
+                m_delayLine2.pushSample(static_cast<int>(channel), inputSample);
+                outputSample = m_delayLine2.popSample(static_cast<int>(channel), currentDelayTimeSamples, true);
+            }
+            lock.unlock();
+
             channelData[sample] = inputSample + outputSample * getDryWet();
         }
     }
@@ -68,10 +85,12 @@ void Delay::process (const juce::dsp::ProcessContextReplacing<float>& context)
 
 void Delay::reset()
 {
-    m_delayLine.reset();
+    m_delayLine1.reset();
+    m_delayLine2.reset();
+    m_delayLine1Active = true;
 }
 
-void Delay::registerParameters(juce::AudioProcessorValueTreeState& apvts)
+void Delay::registerParameters(juce::AudioProcessorValueTreeState &apvts)
 {
     apvts.addParameterListener(DELAY_TIME_DIAL_ID, &m_delayTime);
     apvts.addParameterListener(DRY_WET_DIAL_ID, &m_dryWet);
