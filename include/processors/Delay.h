@@ -89,6 +89,7 @@ public:
     static constexpr char DELAY_TIME_DIAL_TEXT[] = "Delay Time (ms)"; /**< Delay time parameter text. */
     static constexpr char DRY_WET_DIAL_ID[] = "DELAY_DRY_WET";        /**< Dry/Wet mix parameter ID. */
     static constexpr char DRY_WET_DIAL_TEXT[] = "Delay Dry/Wet";      /**< Dry/Wet mix parameter text. */
+    static constexpr float CROSSFADE_TIME_SECONDS = 0.05f; /**< Crossfade time in seconds when changing delay times. */
 
 private:
     /**
@@ -98,10 +99,13 @@ private:
      */
     int getDelayTimeInSamples() const;
 
-    juce::dsp::DelayLine<float> m_delayLine1;                      /**< Delay line processor 1. */
-    juce::dsp::DelayLine<float> m_delayLine2;                      /**< Delay line processor 2. */
-    bool m_delayLine1Active = true;                                /**< Bool flag to determine which delay line to use */
-    double m_sampleRate = 44100.0;                                 /**< Sample rate of the audio host. */
+    juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Lagrange3rd> m_delayLine1; /**< Delay line processor 1. */
+    juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Lagrange3rd> m_delayLine2; /**< Delay line processor 2. */
+    juce::SmoothedValue<float> m_crossfade; /**< Crossfade position between delay lines. */
+    int m_currentDelayTimeSamples = 0; /**< Current delay time in samples. */
+    int m_targetDelayTimeSamples = 0; /**< Target delay time in samples. */
+    bool m_delayLine1Active = true; /**< Bool flag to determine which delay line to use */
+    double m_sampleRate = 44100.0; /**< Sample rate of the audio host. */
 
     juce::SmoothedValue<float> m_smoothedDelayTime; /**< Interpolated delay time. */
     ProcessorParam<
