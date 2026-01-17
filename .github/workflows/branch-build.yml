@@ -48,4 +48,3 @@ jobs:
         with:
           name: ${{ env.PROJECT_NAME }}-${{env.PROJECT_VERSION}}-${{ github.ref_name }}
           path: ${{ env.VST3_DIR }}
-          retention-days: 7
