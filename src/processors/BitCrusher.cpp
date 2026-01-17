@@ -4,7 +4,7 @@ namespace glos::clcr
 {
 
 BitCrusher::BitCrusher() :
-    m_sampleRateRedux(0.0f),
+    m_sampleRateRedux(1.0f),
     m_bitDepth(32.0f)
 {
 }
@@ -58,6 +58,8 @@ void BitCrusher::process (const juce::dsp::ProcessContextReplacing<float>& conte
 void BitCrusher::reset()
 {
     m_heldSample = 0.0f;
+    setSampleRateRedux(0.0f);
+    setBitDepth(32.0f);
 }
 
 void BitCrusher::registerParameters(juce::AudioProcessorValueTreeState& apvts)

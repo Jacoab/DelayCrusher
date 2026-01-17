@@ -187,9 +187,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::
     );
 
     auto delayTimeMin = 0.0f;
-    auto delayTimeMax = 2000.0f; // in milliseconds
+    auto delayTimeMax = 2000.0f;
     auto delayTimeStep = 1.0f;
-    auto delayTimeDefault = 500.0f; // default to 500 ms
+    auto delayTimeDefault = delayTimeMin;
     auto delayTimeParam = std::make_unique<juce::AudioParameterFloat> (
         Delay::DELAY_TIME_DIAL_ID,
         Delay::DELAY_TIME_DIAL_TEXT,
@@ -200,12 +200,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::
     auto dryWetMin = 0.0f;
     auto dryWetMax = 1.0f;
     auto dryWetStep = 0.01f;
-    auto dryWetDefault = noiseAmountMin;
+    auto dryWetDefault = 0.5;
     auto dryWetParam = std::make_unique<juce::AudioParameterFloat> (
         Delay::DRY_WET_DIAL_ID,
         Delay::DRY_WET_DIAL_TEXT,
         juce::NormalisableRange<float>(dryWetMin, dryWetMax, dryWetStep),
-        noiseAmountDefault
+        dryWetDefault
     );
 
     layout.add(std::move(bitDepthParam));
