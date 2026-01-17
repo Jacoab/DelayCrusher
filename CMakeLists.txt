@@ -5,7 +5,7 @@ cmake_policy(SET CMP0135 NEW)
 # Project setup and configuration
 #
 set(PROJECT_NAME "CloudCrusher")
-set(PROJECT_VERSION 1.0.2)
+set(PROJECT_VERSION 1.1.2)
 
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION})
 
