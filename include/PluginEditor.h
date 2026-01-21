@@ -4,6 +4,8 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #include "components/Dial.h"
+#include "components/BitCrusherUI.h"
+#include "components/DelayUI.h"
 #include "processors/BitCrusher.h"
 #include "processors/Delay.h"
 #include "PluginProcessor.h"
@@ -50,12 +52,8 @@ public:
 private:
     CloudCrusherAudioProcessor& m_audioProcessor; /**< Reference to the owning processor */
 
-    Dial m_sampleRateReduxDial; /**< Dial to control sample-rate reduction */
-    Dial m_bitDepthDial;        /**< Dial to control bit depth */
-    Dial m_noiseAmountDial;     /**< Dial to control noise amount (Box-Muller generator) */
-
-    Dial m_delayTimeDial;       /**< Dial to control delay time in milliseconds */
-    Dial m_delayDryWetDial;     /**< Dial to control delay dry/wet mix */
+    BitCrusherUI m_bitCrusherUI; /**< UI for bit crusher controls */
+    DelayUI m_delayUI;         /**< UI for delay controls */
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CloudCrusherAudioProcessorEditor)
 };
