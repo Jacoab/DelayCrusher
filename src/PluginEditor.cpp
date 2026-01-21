@@ -36,14 +36,20 @@ void CloudCrusherAudioProcessorEditor::paint (juce::Graphics& g)
 
 void CloudCrusherAudioProcessorEditor::resized()
 {
-    auto area = getLocalBounds().reduced(20);
-    auto knobWidth = area.getWidth() / 5;
 
-    m_sampleRateReduxDial.setBounds(area.removeFromLeft(knobWidth));
-    m_bitDepthDial.setBounds(area.removeFromLeft(knobWidth));
-    m_noiseAmountDial.setBounds(area.removeFromLeft(knobWidth));
-    m_delayTimeDial.setBounds(area.removeFromLeft(knobWidth));
-    m_delayDryWetDial.setBounds(area);
+    juce::FlexBox fb;
+    fb.flexDirection = juce::FlexBox::Direction::row;
+    fb.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
+
+    auto flexBasis = static_cast<float>(getHeight() / 3.0f);
+    
+    fb.items.add(juce::FlexItem(m_sampleRateReduxDial).withFlex(0, 1, flexBasis));
+    fb.items.add(juce::FlexItem(m_bitDepthDial).withFlex(0, 1, flexBasis));
+    fb.items.add(juce::FlexItem(m_noiseAmountDial).withFlex(0, 1, flexBasis));
+    fb.items.add(juce::FlexItem(m_delayTimeDial).withFlex(0, 1, flexBasis));
+    fb.items.add(juce::FlexItem(m_delayDryWetDial).withFlex(0, 1, flexBasis));
+
+    fb.performLayout (getLocalBounds());
 }
 
 }
