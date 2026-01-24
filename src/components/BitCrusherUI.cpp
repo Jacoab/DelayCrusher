@@ -23,9 +23,9 @@ void BitCrusherUI::resized()
     fb.flexDirection = juce::FlexBox::Direction::row;
     fb.justifyContent = juce::FlexBox::JustifyContent::center;
     
-    fb.items.add(juce::FlexItem(m_sampleRateReduxDial).withFlex(0, 1, flexBasis));
-    fb.items.add(juce::FlexItem(m_bitDepthDial).withFlex(0, 1 , flexBasis));
-    fb.items.add(juce::FlexItem(m_noiseAmountDial).withFlex(0, 1, flexBasis));
+    fb.items.add(juce::FlexItem(m_sampleRateReduxDial).withFlex(1).withMargin(10));
+    fb.items.add(juce::FlexItem(m_bitDepthDial).withFlex(1).withMargin(10));
+    fb.items.add(juce::FlexItem(m_noiseAmountDial).withFlex(1).withMargin(10));
 
     fb.performLayout(bounds);
 }

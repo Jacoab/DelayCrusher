@@ -21,8 +21,8 @@ void DelayUI::resized()
     fb.flexDirection = juce::FlexBox::Direction::row;
     fb.justifyContent = juce::FlexBox::JustifyContent::center;
     
-    fb.items.add(juce::FlexItem(m_delayTimeDial).withFlex(0, 1, flexBasis));
-    fb.items.add(juce::FlexItem(m_delayDryWetDial).withFlex(0, 1 , flexBasis));
+    fb.items.add(juce::FlexItem(m_delayTimeDial).withFlex(1).withMargin(10));
+    fb.items.add(juce::FlexItem(m_delayDryWetDial).withFlex(1).withMargin(10));
 
     fb.performLayout(bounds);
 }

@@ -36,8 +36,8 @@ void CloudCrusherAudioProcessorEditor::resized()
     fb.flexDirection = juce::FlexBox::Direction::row;
     fb.justifyContent = juce::FlexBox::JustifyContent::center;
     
-    fb.items.add(juce::FlexItem(m_bitCrusherUI).withFlex(0, 1, flexBasis));
-    fb.items.add(juce::FlexItem(m_delayUI).withFlex(0, 1, flexBasis));
+    fb.items.add(juce::FlexItem(m_bitCrusherUI).withFlex(3).withMargin(10));
+    fb.items.add(juce::FlexItem(m_delayUI).withFlex(2).withMargin(10));
 
     fb.performLayout(getLocalBounds());
 }

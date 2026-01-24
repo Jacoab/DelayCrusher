@@ -23,8 +23,17 @@ Dial::Dial(const juce::String& name,
 
 void Dial::resized()
 {
-    auto area = getLocalBounds();
-    m_slider.setBounds(area.reduced(5));
+    auto bounds = getLocalBounds();
+    auto flexBasis = static_cast<float>(getWidth());
+
+    juce::FlexBox fb;
+    fb.flexDirection = juce::FlexBox::Direction::column;
+    fb.justifyContent = juce::FlexBox::JustifyContent::center;
+    
+    fb.items.add(juce::FlexItem(m_slider).withFlex(3));
+    fb.items.add(juce::FlexItem(m_label).withFlex(1));
+
+    fb.performLayout(bounds);
 }
 
 }
