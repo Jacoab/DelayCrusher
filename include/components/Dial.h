@@ -24,6 +24,8 @@ public:
          juce::AudioProcessorValueTreeState& apvts,
          const juce::String& paramID);
 
+    ~Dial();
+
     /**
      * @brief Called when the component is resized.  
      * This will layout the slider and label.
@@ -32,9 +34,23 @@ public:
     void resized() override;
 
 private:
+    class LookAndFeel : public juce::LookAndFeel_V4
+    {
+    public:
+        /**
+         * @brief Sets the slider layout so that the text box is positioned below the rotary slider.
+         * 
+         * @param slider The slider to layout.
+         * @return juce::Slider::SliderLayout The layout for the slider.
+         */
+        juce::Slider::SliderLayout getSliderLayout(juce::Slider& slider) override;
+    };
+
     juce::Slider m_slider; /**< Rotary slider */
     juce::Label m_label; /**< Label of the slider*/
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> m_attachment; /**< Attachment to APVTS parameter */
+
+    LookAndFeel m_lookAndFeel; /**< Custom look and feel for the dial */
 };
 
 }
