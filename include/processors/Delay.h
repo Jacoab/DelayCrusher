@@ -86,9 +86,9 @@ public:
     void registerParameters(juce::AudioProcessorValueTreeState &apvts) override;
 
     static constexpr char DELAY_TIME_DIAL_ID[] = "DELAY_TIME";        /**< Delay time parameter ID. */
-    static constexpr char DELAY_TIME_DIAL_TEXT[] = "Delay Time (ms)"; /**< Delay time parameter text. */
+    static constexpr char DELAY_TIME_DIAL_TEXT[] = "Time (ms)"; /**< Delay time parameter text. */
     static constexpr char DRY_WET_DIAL_ID[] = "DELAY_DRY_WET";        /**< Dry/Wet mix parameter ID. */
-    static constexpr char DRY_WET_DIAL_TEXT[] = "Delay Dry/Wet";      /**< Dry/Wet mix parameter text. */
+    static constexpr char DRY_WET_DIAL_TEXT[] = "Dry/Wet";      /**< Dry/Wet mix parameter text. */
     static constexpr float CROSSFADE_TIME_SECONDS = 0.05f; /**< Crossfade time in seconds when changing delay times. */
 
 private:

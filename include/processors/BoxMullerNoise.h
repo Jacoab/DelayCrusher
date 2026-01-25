@@ -74,7 +74,7 @@ public:
     void registerParameters(juce::AudioProcessorValueTreeState& apvts) override;
 
     static constexpr char NOISE_AMOUNT_DIAL_ID[] = "NOISE_AMOUNT"; /**< Parameter ID for noise amount dial */
-    static constexpr char NOISE_AMOUNT_DIAL_TEXT[] = "Noise Amount"; /**< Parameter text for noise amount dial */
+    static constexpr char NOISE_AMOUNT_DIAL_TEXT[] = "Noise"; /**< Parameter text for noise amount dial */
 
 private:
     /**

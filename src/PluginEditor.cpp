@@ -9,7 +9,7 @@ CloudCrusherAudioProcessorEditor::CloudCrusherAudioProcessorEditor (CloudCrusher
     m_bitCrusherUI(m_audioProcessor.getAPVTS()),
     m_delayUI(m_audioProcessor.getAPVTS())
 {
-    setSize (800, 600);
+    setSize (600, 400);
 
     addAndMakeVisible(m_bitCrusherUI);
     addAndMakeVisible(m_delayUI);
@@ -35,9 +35,19 @@ void CloudCrusherAudioProcessorEditor::resized()
     juce::FlexBox fb;
     fb.flexDirection = juce::FlexBox::Direction::row;
     fb.justifyContent = juce::FlexBox::JustifyContent::center;
+    fb.alignItems = juce::FlexBox::AlignItems::center;
     
-    fb.items.add(juce::FlexItem(m_bitCrusherUI).withFlex(3).withMargin(10));
-    fb.items.add(juce::FlexItem(m_delayUI).withFlex(2).withMargin(10));
+    fb.items.add(
+    juce::FlexItem(m_bitCrusherUI)
+        .withWidth(320)
+        .withHeight(200)
+        .withMargin(10)
+    );
+    fb.items.add(juce::FlexItem(m_delayUI)
+        .withWidth(230)
+        .withHeight(200)
+        .withMargin(10)
+    );
 
     fb.performLayout(getLocalBounds());
 }

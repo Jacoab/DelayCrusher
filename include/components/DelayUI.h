@@ -31,6 +31,14 @@ public:
      */
     void resized() override;
 
+    /**
+     * @brief Paints an outline box with the title "Delay" around 
+     * the dials.
+     * 
+     * @param g The graphics context to paint on.
+     */
+    void paint(juce::Graphics& g) override;
+
 private:
     Dial m_delayTimeDial;       /**< Dial to control delay time in milliseconds */
     Dial m_delayDryWetDial;     /**< Dial to control delay dry/wet mix */

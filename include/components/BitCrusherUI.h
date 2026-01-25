@@ -31,6 +31,14 @@ public:
      */
     void resized() override;
 
+    /**
+     * @brief Paints an outline box with the title "Bit Crusher" around 
+     * the dials.
+     * 
+     * @param g The graphics context to paint on.
+     */
+    void paint(juce::Graphics& g) override;
+
 private:
     Dial m_sampleRateReduxDial; /**< Dial to control sample-rate reduction */
     Dial m_bitDepthDial;        /**< Dial to control bit depth */

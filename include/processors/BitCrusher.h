@@ -90,7 +90,7 @@ public:
     void registerParameters(juce::AudioProcessorValueTreeState& apvts) override;
 
     static constexpr char SAMPLE_RATE_REDUX_DIAL_ID[] = "SAMPLE_RATE_REDUX"; /**< Parameter ID for sample rate reduction dial */
-    static constexpr char SAMPLE_RATE_REDUX_DIAL_TEXT[] = "Sample Rate Reduction"; /**< Parameter text for sample rate reduction dial */
+    static constexpr char SAMPLE_RATE_REDUX_DIAL_TEXT[] = "Redux"; /**< Parameter text for sample rate reduction dial */
     static constexpr char BIT_DEPTH_DIAL_ID[] = "BIT_DEPTH"; /**< Parameter ID for bit depth dial */
     static constexpr char BIT_DEPTH_DIAL_TEXT[] = "Bit Depth"; /**< Parameter text for bit depth dial */
 
