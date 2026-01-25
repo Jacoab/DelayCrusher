@@ -29,7 +29,7 @@ void BitCrusherUI::paint(juce::Graphics& g)
     box.setY (box.getY() + titleHeight * 0.5f);
     box.setHeight (box.getHeight() - titleHeight * 0.5f);
 
-    g.setColour (juce::Colours::white);
+    g.setColour(juce::Colour(static_cast<uint32_t>(ColorPalette::PrimaryVariant)));
     g.drawRoundedRectangle (box.reduced (stroke * 0.5f),
                             cornerRadius,
                             stroke);
@@ -38,13 +38,13 @@ void BitCrusherUI::paint(juce::Graphics& g)
     const auto textX = static_cast<int> (bounds.getCentreX() - textWidth * 0.5f);
     const auto textY = 0;
 
-    g.setColour (juce::Colours::black);
+    g.setColour(juce::Colour(static_cast<uint32_t>(ColorPalette::Background)));
     g.fillRect (textX - 6,
                 textY,
                 textWidth + 12,
                 titleHeight);
 
-    g.setColour (juce::Colours::white);
+    g.setColour (juce::Colour(static_cast<uint32_t>(ColorPalette::PrimaryVariant)));
     g.drawText (title,
                 textX,
                 textY,

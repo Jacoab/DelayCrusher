@@ -3,6 +3,8 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
+#include "ColorPalette.h"
+
 namespace glos::clcr
 {
 
@@ -44,6 +46,23 @@ private:
          * @return juce::Slider::SliderLayout The layout for the slider.
          */
         juce::Slider::SliderLayout getSliderLayout(juce::Slider& slider) override;
+
+        /**
+         * @brief Override the default rotary dial styling to use our custom color palette.
+         */
+        void drawRotarySlider(
+            juce::Graphics& g,
+            int x,
+            int y,
+            int width,
+            int height,
+            float sliderPos,
+            const float rotaryStartAngle,
+            const float rotaryEndAngle,
+            juce::Slider&
+        ) override;
+
+        juce::Label* createSliderTextBox (juce::Slider& slider) override;
     };
 
     juce::Slider m_slider; /**< Rotary slider */

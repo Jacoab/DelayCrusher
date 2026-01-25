@@ -19,8 +19,8 @@ CloudCrusherAudioProcessorEditor::~CloudCrusherAudioProcessorEditor() {}
 
 void CloudCrusherAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colours::black);
-    g.setColour (juce::Colours::white);
+    g.fillAll(juce::Colour(static_cast<uint32_t>(ColorPalette::Background)));
+    g.setColour (juce::Colour(static_cast<uint32_t>(ColorPalette::PrimaryVariant)));
     g.setFont (15.0f);
 
     auto topArea = getLocalBounds();

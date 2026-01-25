@@ -6,6 +6,7 @@
 #include "components/Dial.h"
 #include "components/BitCrusherUI.h"
 #include "components/DelayUI.h"
+#include "components/ColorPalette.h"
 #include "processors/BitCrusher.h"
 #include "processors/Delay.h"
 #include "PluginProcessor.h"
