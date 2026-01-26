@@ -57,4 +57,4 @@ jobs:
           gh release create v${{ env.PROJECT_VERSION }}
           "${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}.zip"
           --generate-notes
-          --title "Cloud Crusher v${{ env.PROJECT_VERSION }}"
+          --title "Delay Crusher v${{ env.PROJECT_VERSION }}"

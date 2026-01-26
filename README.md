@@ -1,23 +1,31 @@
 # Delay Crusher
 
+<center>
+    <img src="images/UI.png" alt="drawing" width="600"/>
+</center>
+
+
 Delay Crusher is a VST3 audio effect plugin that provides bit crushing and delay effects for music production. The plugin combines digital distortion with a delay to create lo-fi, retro, and experimental sounds.
 
 ## Features
 
-- **Bit Crusher**: Reduce the bit depth and sample rate of audio for lo-fi and digital artifacts
-- **Noise Generator**: Add analog-style noise using Box-Muller Gaussian noise generation
+- **Bit Crusher**: Reduce the bit depth and sample rate of audio
+- **Noise Generator**: Add noise using Box-Muller Gaussian noise generation
 - **Delay**: Time-based delay effect with dry/wet mixing
-- **Real-time Parameter Control**: Adjustable parameters via a custom GUI editor
-- **VST3 Format**: Compatible with modern DAWs supporting VST3 on macOS
 
 ## Requirements
 
-- macOS 10.13 or later
-- CMake 3.16 or later
-- Xcode Command Line Tools
+- CMake 3.24 or later
+- Xcode Command Line Tools (MacOS)
 - JUCE framework (included as a submodule)
 
 ## Building
+
+Start by cloning the repository and initializing the JUCE submodule:
+
+```
+git clone --recurse-submodules https://github.com/Jacoab/DelayCrusher.git
+```
 
 To build Delay Crusher:
 
@@ -33,12 +41,12 @@ This will generate an Xcode project in the `build` directory and compile the VST
 To run unit tests:
 
 ```
-ctest --test-dir build -C Debug -V
+ctest --test-dir build -C Release -V
 ```
 
 ## Installing
 
-### macOS VST3 Installation
+### MacOS VST3 Installation
 
 The CMake build should automatically put the plugin into the correct directory.  If the plugin does not appear then verify that it has been installed to the correct location.
 
@@ -52,4 +60,4 @@ If the directory is not found then you can install Delay Crusher by copying the 
 cp -r build/DelayCrusher_artefacts/Release/VST3/DelayCrusher.vst3 ~/Library/Audio/Plug-Ins/VST3/
 ```
 
-After installation, the plugin will be available in any VST3-compatible DAW on macOS. You may need to re-scan the plugin directory in your DAW.
+After installation, the plugin will be available in any VST3-compatible DAW. You may need to re-scan the plugin directory in your DAW.
