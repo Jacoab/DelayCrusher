@@ -24,9 +24,11 @@ set(PROJECT_SOURCES
     src/processors/BoxMullerNoise.cpp
     src/processors/BitCrusher.cpp
     src/processors/Delay.cpp
+    src/components/EditorGroup.cpp
     src/components/Dial.cpp
     src/components/BitCrusherUI.cpp
     src/components/DelayUI.cpp
+    src/components/ColorPalette.cpp
     src/PluginProcessor.cpp
     src/PluginEditor.cpp
 )

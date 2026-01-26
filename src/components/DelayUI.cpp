@@ -4,6 +4,7 @@ namespace glos::clcr
 {
 
 DelayUI::DelayUI(juce::AudioProcessorValueTreeState& apvts) :
+    EditorGroup("Delay"),
     m_delayTimeDial(Delay::DELAY_TIME_DIAL_TEXT, apvts, Delay::DELAY_TIME_DIAL_ID),
     m_delayDryWetDial(Delay::DRY_WET_DIAL_TEXT, apvts, Delay:: DRY_WET_DIAL_ID)
 {
@@ -24,47 +25,6 @@ void DelayUI::resized()
     fb.items.add(juce::FlexItem(m_delayDryWetDial).withFlex(1).withMargin(10));
 
     fb.performLayout(bounds);
-}
-
-void DelayUI::paint(juce::Graphics& g)
-{
-    constexpr auto cornerRadius = 6.0f;
-    constexpr auto stroke = 1.5f;
-
-    const std::string title = "Delay";
-
-    g.setFont (14.0f);
-    const auto titleHeight = juce::roundToInt (g.getCurrentFont().getHeight());
-
-    auto bounds = getLocalBounds().toFloat();
-
-    auto box = bounds;
-    box.setY (box.getY() + titleHeight * 0.5f);
-    box.setHeight (box.getHeight() - titleHeight * 0.5f);
-
-    g.setColour (juce::Colour(static_cast<uint32_t>(ColorPalette::PrimaryVariant)));
-    g.drawRoundedRectangle (box.reduced (stroke * 0.5f),
-                            cornerRadius,
-                            stroke);
-
-    const auto textWidth = g.getCurrentFont().getStringWidth(title);
-    const auto textX = static_cast<int> (bounds.getCentreX() - textWidth * 0.5f);
-    const auto textY = 0;
-
-    g.setColour (juce::Colour(static_cast<uint32_t>(ColorPalette::Background)));
-    g.fillRect (textX - 6,
-                textY,
-                textWidth + 12,
-                titleHeight);
-
-    g.setColour (juce::Colour(static_cast<uint32_t>(ColorPalette::PrimaryVariant)));
-    g.drawText (title,
-                textX,
-                textY,
-                textWidth,
-                titleHeight,
-                juce::Justification::centred,
-                false);
 }
 
 }

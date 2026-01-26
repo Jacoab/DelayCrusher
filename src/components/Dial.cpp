@@ -15,7 +15,10 @@ Dial::Dial(const juce::String& name,
 
     m_label.setJustificationType(juce::Justification::centredTop);
     m_label.setBorderSize(juce::BorderSize<int>(0));
-    m_label.setColour(juce::Label::textColourId, juce::Colour(static_cast<int>(ColorPalette::PrimaryVariant)));
+    m_label.setColour(
+        juce::Label::textColourId, 
+        getColorFromPalette(ColorPalette::PrimaryVariant)
+    );
 
     m_attachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
             apvts, paramID, m_slider);
@@ -95,12 +98,15 @@ void Dial::LookAndFeel::drawRotarySlider(
     auto rw = radius * 2.0f;
     auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 
+    auto primaryColor = getColorFromPalette(ColorPalette::Primary);
+    auto secondaryColor = getColorFromPalette(ColorPalette::Secondary);
+
     // fill
-    g.setColour(juce::Colour(static_cast<int>(ColorPalette::Primary)));
+    g.setColour(primaryColor);
     g.fillEllipse (rx, ry, rw, rw);
-    
+
     // outline
-    g.setColour(juce::Colour(static_cast<int>(ColorPalette::Secondary)));
+    g.setColour(secondaryColor);
     g.drawEllipse(rx, ry, rw, rw, 1.0f);
 
     juce::Path p;
@@ -109,32 +115,34 @@ void Dial::LookAndFeel::drawRotarySlider(
     p.addRectangle(-pointerThickness * 0.5f, -radius, pointerThickness, pointerLength);
     p.applyTransform(juce::AffineTransform::rotation (angle).translated (centreX, centreY));
 
-    g.setColour(juce::Colour(static_cast<int>(ColorPalette::Secondary)));
+    g.setColour(secondaryColor);
     g.fillPath (p);
 }
 
 juce::Label* Dial::LookAndFeel::createSliderTextBox (juce::Slider& slider)
 {
     auto* label = juce::LookAndFeel_V4::createSliderTextBox(slider);
+    auto primaryVariantColor = getColorFromPalette(ColorPalette::PrimaryVariant);
+    auto backgroundColor = getColorFromPalette(ColorPalette::Background);
 
     label->setColour(
         juce::Label::textColourId,
-        juce::Colour(static_cast<int>(ColorPalette::PrimaryVariant))
+        primaryVariantColor
     );
 
     label->setColour(
         juce::Label::textWhenEditingColourId,
-        juce::Colour(static_cast<int>(ColorPalette::PrimaryVariant))
+        primaryVariantColor
     );
 
     label->setColour(
         juce::Label::backgroundColourId,
-        juce::Colour(static_cast<int>(ColorPalette::Background))
+        backgroundColor
     );
 
     label->setColour(
         juce::Label::outlineColourId,
-        juce::Colour(static_cast<int>(ColorPalette::PrimaryVariant))
+        primaryVariantColor
     );
 
     label->setJustificationType(juce::Justification::centred);

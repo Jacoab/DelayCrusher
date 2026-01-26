@@ -4,6 +4,7 @@ namespace glos::clcr
 {
 
 BitCrusherUI::BitCrusherUI(juce::AudioProcessorValueTreeState& apvts) :
+    EditorGroup("Bit Crusher"),
     m_sampleRateReduxDial(BitCrusher::SAMPLE_RATE_REDUX_DIAL_TEXT, apvts,  BitCrusher::SAMPLE_RATE_REDUX_DIAL_ID),
     m_bitDepthDial(BitCrusher::BIT_DEPTH_DIAL_TEXT, apvts, BitCrusher::BIT_DEPTH_DIAL_ID),
     m_noiseAmountDial(BoxMullerNoise::NOISE_AMOUNT_DIAL_TEXT, apvts, BoxMullerNoise::NOISE_AMOUNT_DIAL_ID)
@@ -11,47 +12,6 @@ BitCrusherUI::BitCrusherUI(juce::AudioProcessorValueTreeState& apvts) :
     addAndMakeVisible(m_sampleRateReduxDial);
     addAndMakeVisible(m_bitDepthDial);
     addAndMakeVisible(m_noiseAmountDial);
-}
-
-void BitCrusherUI::paint(juce::Graphics& g)
-{
-    constexpr auto cornerRadius = 6.0f;
-    constexpr auto stroke = 1.5f;
-
-    const std::string title = "Bit Crusher";
-
-    g.setFont (14.0f);
-    const auto titleHeight = juce::roundToInt (g.getCurrentFont().getHeight());
-
-    auto bounds = getLocalBounds().toFloat();
-
-    auto box = bounds;
-    box.setY (box.getY() + titleHeight * 0.5f);
-    box.setHeight (box.getHeight() - titleHeight * 0.5f);
-
-    g.setColour(juce::Colour(static_cast<uint32_t>(ColorPalette::PrimaryVariant)));
-    g.drawRoundedRectangle (box.reduced (stroke * 0.5f),
-                            cornerRadius,
-                            stroke);
-
-    const auto textWidth = g.getCurrentFont().getStringWidth(title);
-    const auto textX = static_cast<int> (bounds.getCentreX() - textWidth * 0.5f);
-    const auto textY = 0;
-
-    g.setColour(juce::Colour(static_cast<uint32_t>(ColorPalette::Background)));
-    g.fillRect (textX - 6,
-                textY,
-                textWidth + 12,
-                titleHeight);
-
-    g.setColour (juce::Colour(static_cast<uint32_t>(ColorPalette::PrimaryVariant)));
-    g.drawText (title,
-                textX,
-                textY,
-                textWidth,
-                titleHeight,
-                juce::Justification::centred,
-                false);
 }
 
 void BitCrusherUI::resized()

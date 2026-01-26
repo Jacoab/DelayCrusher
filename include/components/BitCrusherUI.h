@@ -5,6 +5,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
+#include "components/EditorGroup.h"
 #include "components/Dial.h"
 #include "components/ColorPalette.h"
 #include "processors/BitCrusher.h"
@@ -18,7 +19,7 @@ namespace glos::clcr
  * bit depth, and noise amount.
  * 
  */
-class BitCrusherUI : public juce::Component
+class BitCrusherUI : public EditorGroup
 {
 public:
     /** Create a new BitCrusherUI component.
@@ -33,14 +34,6 @@ public:
      * 
      */
     void resized() override;
-
-    /**
-     * @brief Paints an outline box with the title "Bit Crusher" around 
-     * the dials.
-     * 
-     * @param g The graphics context to paint on.
-     */
-    void paint(juce::Graphics& g) override;
 
 private:
     Dial m_sampleRateReduxDial; /**< Dial to control sample-rate reduction */
