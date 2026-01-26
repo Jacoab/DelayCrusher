@@ -3,7 +3,7 @@
 #include <juce_dsp/juce_dsp.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
-namespace glos::clcr
+namespace dlcr
 {
 
 /**
@@ -44,4 +44,4 @@ struct SynchronizedProcessor : public juce::dsp::ProcessorBase
 
 };
 
-} // namespace glos::clcr
+} // namespace dlcr

@@ -7,9 +7,9 @@ on:
       - '!main'
 
 env:
-  PROJECT_NAME: CloudCrusher
+  PROJECT_NAME: DelayCrusher
   PROJECT_VERSION: 1.1.2
-  VST3_DIR: ./build/CloudCrusher_artefacts/Release/VST3
+  VST3_DIR: ./build/DelayCrusher_artefacts/Release/VST3
 
 jobs:
   upload-artifact:

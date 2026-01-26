@@ -1,6 +1,6 @@
-# Cloud Crusher
+# Delay Crusher
 
-Cloud Crusher is a VST3 audio effect plugin that provides bit crushing and delay effects for music production. The plugin combines digital distortion with a delay to create lo-fi, retro, and experimental sounds.
+Delay Crusher is a VST3 audio effect plugin that provides bit crushing and delay effects for music production. The plugin combines digital distortion with a delay to create lo-fi, retro, and experimental sounds.
 
 ## Features
 
@@ -19,14 +19,14 @@ Cloud Crusher is a VST3 audio effect plugin that provides bit crushing and delay
 
 ## Building
 
-To build Cloud Crusher:
+To build Delay Crusher:
 
 ```
 cmake -B build -S . -G Xcode
 cmake --build ./build --config Release
 ```
 
-This will generate an Xcode project in the `build` directory and compile the VST3 plugin. The built plugin will be located in `build/CloudCrusher_artefacts/Release/Cloud Crusher.vst3`.
+This will generate an Xcode project in the `build` directory and compile the VST3 plugin. The built plugin will be located in `build/DelayCrusher_artefacts/Release/Delay Crusher.vst3`.
 
 ## Testing
 
@@ -43,13 +43,13 @@ ctest --test-dir build -C Debug -V
 The CMake build should automatically put the plugin into the correct directory.  If the plugin does not appear then verify that it has been installed to the correct location.
 
 ```
-ls ~/Library/Audio/Plug-Ins/VST3/CloudCrusher.vst3/Contents/MacOS
+ls ~/Library/Audio/Plug-Ins/VST3/DelayCrusher.vst3/Contents/MacOS
 ```
 
-If the directory is not found then you can install Cloud Crusher by copying the built plugin to the standard VST3 location:
+If the directory is not found then you can install Delay Crusher by copying the built plugin to the standard VST3 location:
 
 ```
-cp -r build/CloudCrusher_artefacts/Release/VST3/CloudCrusher.vst3 ~/Library/Audio/Plug-Ins/VST3/
+cp -r build/DelayCrusher_artefacts/Release/VST3/DelayCrusher.vst3 ~/Library/Audio/Plug-Ins/VST3/
 ```
 
 After installation, the plugin will be available in any VST3-compatible DAW on macOS. You may need to re-scan the plugin directory in your DAW.

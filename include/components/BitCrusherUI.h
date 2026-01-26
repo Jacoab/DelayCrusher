@@ -10,7 +10,7 @@
 #include "components/ColorPalette.h"
 #include "processors/BitCrusher.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 /**

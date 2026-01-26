@@ -24,7 +24,7 @@ TEST(TestBitCrusher, ProcessSample)
     auto sampleRateRedux = 22050.0f;
     auto bitDepth = 8.0f;
 
-    glos::clcr::BitCrusher bitCrusher{};
+    dlcr::BitCrusher bitCrusher{};
     bitCrusher.setSampleRateRedux(sampleRateRedux);
     bitCrusher.setBitDepth(bitDepth);
 

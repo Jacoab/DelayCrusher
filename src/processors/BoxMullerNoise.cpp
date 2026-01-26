@@ -1,6 +1,6 @@
 #include "processors/BoxMullerNoise.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 void BoxMullerNoise::setNoiseAmount(float noiseAmountParam) noexcept

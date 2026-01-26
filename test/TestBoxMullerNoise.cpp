@@ -22,7 +22,7 @@ TEST(TestBoxMullerNoise, KolmogorovSmirnovTest)
     spec.maximumBlockSize = numSamples;
 
     float noiseAmount(1.0f);
-    glos::clcr::BoxMullerNoise noiseGenerator;
+    dlcr::BoxMullerNoise noiseGenerator;
     noiseGenerator.setNoiseAmount(noiseAmount);
     noiseGenerator.prepare(spec);
 

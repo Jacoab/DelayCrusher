@@ -1,6 +1,6 @@
 #include "processors/Delay.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 Delay::Delay() : 

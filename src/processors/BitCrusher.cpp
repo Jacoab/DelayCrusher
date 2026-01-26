@@ -1,6 +1,6 @@
 #include "processors/BitCrusher.h"
 
-namespace glos::clcr 
+namespace dlcr 
 {
 
 BitCrusher::BitCrusher() :

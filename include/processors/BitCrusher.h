@@ -11,7 +11,7 @@
 #include "processors/SynchronizedProcessor.h"
 #include "ProcessorParam.h"
 
-namespace glos::clcr 
+namespace dlcr 
 {
 
 /**
@@ -117,4 +117,4 @@ private:
     > m_bitDepth; /**< Number of bits used to represent each sample after processing */
 };
 
-} // namespace glos::clcr
+} // namespace dlcr

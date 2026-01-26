@@ -10,7 +10,7 @@
 #include "components/ColorPalette.h"
 #include "processors/Delay.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 /**

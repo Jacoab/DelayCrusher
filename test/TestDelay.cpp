@@ -15,7 +15,7 @@ TEST(TestDelay, ProcessDelay)
     spec.maximumBlockSize = delayTimeInSamples + 10; // Extra samples to accommodate delay
     spec.numChannels = 2;
 
-    glos::clcr::Delay delay;
+    dlcr::Delay delay;
     
     delay.setDelayTime(delayTime);
     delay.setDryWet(dryWet);

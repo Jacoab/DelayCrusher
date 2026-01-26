@@ -4,7 +4,7 @@
 
 #include "components/ColorPalette.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 /**

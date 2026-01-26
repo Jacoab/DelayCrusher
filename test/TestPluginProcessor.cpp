@@ -7,7 +7,7 @@
 TEST(TestPluginProcessor, BitCrusherParameterSync)
 {
     juce::ScopedJuceInitialiser_GUI juceInit;
-    glos::clcr::CloudCrusherAudioProcessor processor{};
+    dlcr::DelayCrusherAudioProcessor processor{};
     auto& apvts = processor.getAPVTS();
 
     processor.prepareToPlay(44100.0, 512);
@@ -16,11 +16,11 @@ TEST(TestPluginProcessor, BitCrusherParameterSync)
     const auto& noiseGenerator = processor.getNoiseGenerator();
     const auto& delay = processor.getDelay();
 
-    auto* sampleRateReduxParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(glos::clcr::BitCrusher::SAMPLE_RATE_REDUX_DIAL_ID));
-    auto* bitDepthParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(glos::clcr::BitCrusher::BIT_DEPTH_DIAL_ID));
-    auto* noiseAmountParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(glos::clcr::BoxMullerNoise::NOISE_AMOUNT_DIAL_ID));
-    auto* delayTimeParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(glos::clcr::Delay::DELAY_TIME_DIAL_ID));
-    auto* delayDryWetParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(glos::clcr::Delay::DRY_WET_DIAL_ID));
+    auto* sampleRateReduxParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(dlcr::BitCrusher::SAMPLE_RATE_REDUX_DIAL_ID));
+    auto* bitDepthParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(dlcr::BitCrusher::BIT_DEPTH_DIAL_ID));
+    auto* noiseAmountParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(dlcr::BoxMullerNoise::NOISE_AMOUNT_DIAL_ID));
+    auto* delayTimeParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(dlcr::Delay::DELAY_TIME_DIAL_ID));
+    auto* delayDryWetParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(dlcr::Delay::DRY_WET_DIAL_ID));
 
     ASSERT_NE(sampleRateReduxParam, nullptr);
     ASSERT_NE(bitDepthParam, nullptr);
@@ -49,15 +49,15 @@ TEST(TestPluginProcessor, BitCrusherParameterSync)
 TEST(TestPluginProcessor, ProcessBlockUsesUpdatedParameters)
 {
     juce::ScopedJuceInitialiser_GUI juceInit;
-    glos::clcr::CloudCrusherAudioProcessor processor{};
+    dlcr::DelayCrusherAudioProcessor processor{};
     processor.prepareToPlay(44100.0, 512);
 
     auto& apvts = processor.getAPVTS();
-    auto* sampleRateReduxParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(glos::clcr::BitCrusher::SAMPLE_RATE_REDUX_DIAL_ID));
-    auto* bitDepthParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(glos::clcr::BitCrusher::BIT_DEPTH_DIAL_ID));
-    auto* noiseAmountParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(glos::clcr::BoxMullerNoise::NOISE_AMOUNT_DIAL_ID));
-    auto* delayTimeParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(glos::clcr::Delay::DELAY_TIME_DIAL_ID));
-    auto* delayDryWetParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(glos::clcr::Delay::DRY_WET_DIAL_ID));
+    auto* sampleRateReduxParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(dlcr::BitCrusher::SAMPLE_RATE_REDUX_DIAL_ID));
+    auto* bitDepthParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(dlcr::BitCrusher::BIT_DEPTH_DIAL_ID));
+    auto* noiseAmountParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(dlcr::BoxMullerNoise::NOISE_AMOUNT_DIAL_ID));
+    auto* delayTimeParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(dlcr::Delay::DELAY_TIME_DIAL_ID));
+    auto* delayDryWetParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(dlcr::Delay::DRY_WET_DIAL_ID));
 
     ASSERT_NE(sampleRateReduxParam, nullptr);
     ASSERT_NE(bitDepthParam, nullptr);

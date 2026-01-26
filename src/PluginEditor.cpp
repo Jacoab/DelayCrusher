@@ -1,9 +1,9 @@
 #include "PluginEditor.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
-CloudCrusherAudioProcessorEditor::CloudCrusherAudioProcessorEditor (CloudCrusherAudioProcessor& p) : 
+DelayCrusherAudioProcessorEditor::DelayCrusherAudioProcessorEditor (DelayCrusherAudioProcessor& p) : 
     AudioProcessorEditor (&p), 
     m_audioProcessor (p),
     m_bitCrusherUI(m_audioProcessor.getAPVTS()),
@@ -15,9 +15,9 @@ CloudCrusherAudioProcessorEditor::CloudCrusherAudioProcessorEditor (CloudCrusher
     addAndMakeVisible(m_delayUI);
 }
 
-CloudCrusherAudioProcessorEditor::~CloudCrusherAudioProcessorEditor() {}
+DelayCrusherAudioProcessorEditor::~DelayCrusherAudioProcessorEditor() {}
 
-void CloudCrusherAudioProcessorEditor::paint (juce::Graphics& g)
+void DelayCrusherAudioProcessorEditor::paint (juce::Graphics& g)
 {
     auto primaryVariantColor = getColorFromPalette(ColorPalette::PrimaryVariant);
     auto backgroundColor = getColorFromPalette(ColorPalette::Background);
@@ -27,10 +27,10 @@ void CloudCrusherAudioProcessorEditor::paint (juce::Graphics& g)
     g.setFont (15.0f);
 
     auto topArea = getLocalBounds();
-    g.drawFittedText ("Cloud Crusher", topArea, juce::Justification::centredTop, 1);
+    g.drawFittedText ("Delay Crusher", topArea, juce::Justification::centredTop, 1);
 }
 
-void CloudCrusherAudioProcessorEditor::resized()
+void DelayCrusherAudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
     auto flexBasis = static_cast<float>(getWidth());

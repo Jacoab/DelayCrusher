@@ -1,6 +1,6 @@
 #include "EditorGroup.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 EditorGroup::EditorGroup(const std::string title) :

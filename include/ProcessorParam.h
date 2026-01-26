@@ -5,7 +5,7 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 
-namespace glos::clcr
+namespace dlcr
 {
 
 // Source - https://stackoverflow.com/a

@@ -6,7 +6,7 @@
 #include "processors/SynchronizedProcessor.h"
 #include "ProcessorParam.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 /**

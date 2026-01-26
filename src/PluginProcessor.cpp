@@ -1,29 +1,29 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
-CloudCrusherAudioProcessor::CloudCrusherAudioProcessor() :
+DelayCrusherAudioProcessor::DelayCrusherAudioProcessor() :
 #ifndef JucePlugin_PreferredChannelConfigurations
     AudioProcessor (BusesProperties()
 #if ! JucePlugin_IsMidiEffect
 #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
+    .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
 #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
+    .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-                       ),
+    ),
 #endif
     m_apvts(*this, nullptr, "UI Parameters", createParameterLayout())
 {
 }
 
-CloudCrusherAudioProcessor::~CloudCrusherAudioProcessor() {}
+DelayCrusherAudioProcessor::~DelayCrusherAudioProcessor() {}
 
-const juce::String CloudCrusherAudioProcessor::getName() const { return "Cloud Crusher"; }
+const juce::String DelayCrusherAudioProcessor::getName() const { return "Delay Crusher"; }
 
-bool CloudCrusherAudioProcessor::acceptsMidi() const
+bool DelayCrusherAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -32,7 +32,7 @@ bool CloudCrusherAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool CloudCrusherAudioProcessor::producesMidi() const
+bool DelayCrusherAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -41,7 +41,7 @@ bool CloudCrusherAudioProcessor::producesMidi() const
    #endif
 }
 
-bool CloudCrusherAudioProcessor::isMidiEffect() const
+bool DelayCrusherAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -50,15 +50,15 @@ bool CloudCrusherAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double CloudCrusherAudioProcessor::getTailLengthSeconds() const { return 0.0; }
+double DelayCrusherAudioProcessor::getTailLengthSeconds() const { return 0.0; }
 
-int CloudCrusherAudioProcessor::getNumPrograms() { return 1; }
-int CloudCrusherAudioProcessor::getCurrentProgram() { return 0; }
-void CloudCrusherAudioProcessor::setCurrentProgram (int) {}
-const juce::String CloudCrusherAudioProcessor::getProgramName (int) { return {}; }
-void CloudCrusherAudioProcessor::changeProgramName (int, const juce::String&) {}
+int DelayCrusherAudioProcessor::getNumPrograms() { return 1; }
+int DelayCrusherAudioProcessor::getCurrentProgram() { return 0; }
+void DelayCrusherAudioProcessor::setCurrentProgram (int) {}
+const juce::String DelayCrusherAudioProcessor::getProgramName (int) { return {}; }
+void DelayCrusherAudioProcessor::changeProgramName (int, const juce::String&) {}
 
-void CloudCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) 
+void DelayCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) 
 {
     juce::dsp::ProcessSpec spec (
         sampleRate, 
@@ -78,10 +78,10 @@ void CloudCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
     m_processorChain.prepare(spec);
 }
 
-void CloudCrusherAudioProcessor::releaseResources() {}
+void DelayCrusherAudioProcessor::releaseResources() {}
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool CloudCrusherAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool DelayCrusherAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
 #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -100,7 +100,7 @@ bool CloudCrusherAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 }
 #endif
 
-void CloudCrusherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
+void DelayCrusherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
 
@@ -112,44 +112,44 @@ void CloudCrusherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     m_processorChain.process(context);
 }
 
-bool CloudCrusherAudioProcessor::hasEditor() const { return true; }
+bool DelayCrusherAudioProcessor::hasEditor() const { return true; }
 
-juce::AudioProcessorEditor* CloudCrusherAudioProcessor::createEditor()
+juce::AudioProcessorEditor* DelayCrusherAudioProcessor::createEditor()
 {
-    return new CloudCrusherAudioProcessorEditor (*this);
+    return new DelayCrusherAudioProcessorEditor (*this);
 }
 
-void CloudCrusherAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void DelayCrusherAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     // You should use this method to store parameters in the memory block.
 }
 
-void CloudCrusherAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void DelayCrusherAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore parameters from this memory block.
 }
 
-juce::AudioProcessorValueTreeState& CloudCrusherAudioProcessor::getAPVTS()
+juce::AudioProcessorValueTreeState& DelayCrusherAudioProcessor::getAPVTS()
 {
     return m_apvts;
 }
 
-const BitCrusher& CloudCrusherAudioProcessor::getBitCrusher()
+const BitCrusher& DelayCrusherAudioProcessor::getBitCrusher()
 {
     return m_processorChain.get<BitCrusherIndex>();
 }
 
-const BoxMullerNoise& CloudCrusherAudioProcessor::getNoiseGenerator()
+const BoxMullerNoise& DelayCrusherAudioProcessor::getNoiseGenerator()
 {
     return m_processorChain.get<NoiseIndex>();
 }
 
-const Delay& CloudCrusherAudioProcessor::getDelay()
+const Delay& DelayCrusherAudioProcessor::getDelay()
 {
     return m_processorChain.get<DelayIndex>();
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout DelayCrusherAudioProcessor::createParameterLayout()
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
@@ -222,5 +222,5 @@ juce::AudioProcessorValueTreeState::ParameterLayout CloudCrusherAudioProcessor::
 // This creates new instances of the plugin
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new glos::clcr::CloudCrusherAudioProcessor();
+    return new dlcr::DelayCrusherAudioProcessor();
 }

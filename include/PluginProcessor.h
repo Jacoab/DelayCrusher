@@ -9,30 +9,30 @@
 #include "processors/BitCrusher.h"
 #include "processors/Delay.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 /**
- * @class CloudCrusherAudioProcessor
- * @brief Main audio processor for the CloudCrusher plugin.
+ * @class DelayCrusherAudioProcessor
+ * @brief Main audio processor for the DelayCrusher plugin.
  *
  * This class implements juce::AudioProcessor and manages the plugin's
  * DSP processor chain (BitCrusher, BoxMullerNoise, Delay) as well as the
  * AudioProcessorValueTreeState that holds parameters used by both the UI
  * and the audio processing code.
  */
-class CloudCrusherAudioProcessor  : public juce::AudioProcessor
+class DelayCrusherAudioProcessor  : public juce::AudioProcessor
 {
 public:
     /** 
      * @brief Constructor. Initializes the processor chain and parameter state.
      */
-    CloudCrusherAudioProcessor();
+    DelayCrusherAudioProcessor();
 
     /** 
      * @brief Destructor. 
      */
-    ~CloudCrusherAudioProcessor() override;
+    ~DelayCrusherAudioProcessor() override;
 
     /**
      * @brief Prepare resources before playback begins.
@@ -160,19 +160,19 @@ public:
      * @brief Const accessor to the BitCrusher processor in the chain.
      * @return Const reference to the BitCrusher.
      */
-    const glos::clcr::BitCrusher& getBitCrusher();
+    const dlcr::BitCrusher& getBitCrusher();
 
     /**
      * @brief Const accessor to the noise generator in the chain.
      * @return Const reference to the BoxMullerNoise generator.
      */
-    const glos::clcr::BoxMullerNoise& getNoiseGenerator();
+    const dlcr::BoxMullerNoise& getNoiseGenerator();
 
     /**
      * @brief Const accessor to the Delay processor in the chain.
      * @return Const reference to the Delay processor.
      */
-    const glos::clcr::Delay& getDelay();
+    const dlcr::Delay& getDelay();
     
     /**
      * @brief Create the parameter layout used by the APVTS.
@@ -190,7 +190,7 @@ private:
     juce::dsp::ProcessorChain<BitCrusher, BoxMullerNoise, Delay> m_processorChain; /**< Processor chain that performs the DSP in-series. */
     juce::AudioProcessorValueTreeState m_apvts; /**< AudioProcessorValueTreeState that stores plugin parameters. */
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CloudCrusherAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DelayCrusherAudioProcessor)
 };
 
 }

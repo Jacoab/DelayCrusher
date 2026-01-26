@@ -1,6 +1,6 @@
 #include "components/BitCrusherUI.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 BitCrusherUI::BitCrusherUI(juce::AudioProcessorValueTreeState& apvts) :

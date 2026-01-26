@@ -1,6 +1,6 @@
 #include "components/DelayUI.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 DelayUI::DelayUI(juce::AudioProcessorValueTreeState& apvts) :

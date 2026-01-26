@@ -1,6 +1,6 @@
 #include "components/ColorPalette.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 juce::Colour getColorFromPalette(ColorPalette color)

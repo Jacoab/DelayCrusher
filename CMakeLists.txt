@@ -4,7 +4,7 @@ cmake_policy(SET CMP0135 NEW)
 #
 # Project setup and configuration
 #
-set(PROJECT_NAME "CloudCrusher")
+set(PROJECT_NAME "DelayCrusher")
 set(PROJECT_VERSION 1.1.2)
 
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION})
@@ -50,14 +50,14 @@ FetchContent_MakeAvailable(googletest)
 #
 add_subdirectory(JUCE)
 juce_add_plugin(${PROJECT_NAME}
-    COMPANY_NAME "GlossolaliaAudio"
+    COMPANY_NAME "Jake Jongewaard"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE
     COPY_PLUGIN_AFTER_BUILD TRUE
-    PLUGIN_MANUFACTURER_CODE Glos
-    PLUGIN_CODE ClCr
+    PLUGIN_MANUFACTURER_CODE Jake
+    PLUGIN_CODE DlCr
     FORMATS VST3
     PRODUCT_NAME ${PROJECT_NAME}
 )

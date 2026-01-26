@@ -1,6 +1,6 @@
 #include "Dial.h"
 
-namespace glos::clcr
+namespace dlcr
 {
 
 Dial::Dial(const juce::String& name,

@@ -13,7 +13,7 @@ constexpr char paramName[] = "Test Parameter";
 
 TEST(TestProcessorParam, ParameterChangedUpdatesValue)
 {
-    glos::clcr::ProcessorParam<paramID, paramName, float> processorParam(0.0f);
+    dlcr::ProcessorParam<paramID, paramName, float> processorParam(0.0f);
 
     float newValue = 5.0f;
     processorParam.parameterChanged(paramID, newValue);
@@ -39,7 +39,7 @@ TEST(TestProcessorParam, APVTSChangeUpdatesValue)
     juce::AudioProcessorValueTreeState apvts(mockProcessor, nullptr, "Params", std::move(layout));
 
     // ProcessorParam instance and registration as listener
-    glos::clcr::ProcessorParam<paramID, paramName, float> processorParam(0.0f);
+    dlcr::ProcessorParam<paramID, paramName, float> processorParam(0.0f);
     apvts.addParameterListener(paramID, &processorParam);
 
     // Change the parameter via APVTS (use convertTo0to1 to get normalized value)
