@@ -71,8 +71,8 @@ jobs:
         run: |
           cd ${{ env.VST3_DIR }}
           powershell -Command "Compress-Archive -Path '${{ env.PROJECT_NAME }}.vst3' -DestinationPath '${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}-Windows.zip'"
-          move "${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}-Windows.zip" "%GITHUB_WORKSPACE%"
-          cd %GITHUB_WORKSPACE%
+          move "${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}-Windows.zip" ${{ github.workspace }}
+          cd ${{ github.workspace }}
 
       - name: Create GitHub release (macOS only)
         if: matrix.os == 'macos-latest'
