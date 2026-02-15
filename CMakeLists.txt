@@ -5,7 +5,7 @@ cmake_policy(SET CMP0135 NEW)
 # Project setup and configuration
 #
 set(PROJECT_NAME "DelayCrusher")
-set(PROJECT_VERSION 1.1.3)
+set(PROJECT_VERSION 1.2.0)
 
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION})
 
