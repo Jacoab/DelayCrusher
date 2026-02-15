@@ -47,6 +47,7 @@ case "$BUMP_TYPE" in
         ;;
     "minor")
         MINOR=$((MINOR + 1))
+        PATCH=0
         ;;
     "patch")
         PATCH=$((PATCH + 1))
@@ -59,18 +60,18 @@ echo "Bumping version: $CURRENT_VERSION -> $NEW_VERSION"
 
 # Update CMakeLists.txt
 sed -i '' "s/set(PROJECT_VERSION $CURRENT_VERSION)/set(PROJECT_VERSION $NEW_VERSION)/" CMakeLists.txt
-echo "✓ Updated CMakeLists.txt"
+echo "[OK] Updated CMakeLists.txt"
 
 # Update branch-build.yml if it exists
 if [ -f ".github/workflows/branch-build.yml" ]; then
     sed -i '' "s/PROJECT_VERSION: $CURRENT_VERSION/PROJECT_VERSION: $NEW_VERSION/" .github/workflows/branch-build.yml
-    echo "✓ Updated .github/workflows/branch-build.yml"
+    echo "[OK] Updated .github/workflows/branch-build.yml"
 fi
 
 # Update release.yml if it exists
 if [ -f ".github/workflows/release.yml" ]; then
     sed -i '' "s/PROJECT_VERSION: $CURRENT_VERSION/PROJECT_VERSION: $NEW_VERSION/" .github/workflows/release.yml
-    echo "✓ Updated .github/workflows/release.yml"
+    echo "[OK] Updated .github/workflows/release.yml"
 fi
 
 echo "Version bump complete: $NEW_VERSION"
