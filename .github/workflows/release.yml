@@ -62,16 +62,16 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           cd ${{ env.VST3_DIR }}
-          zip -r ./${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}.zip ${{ env.PROJECT_NAME }}.vst3
-          mv ${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}.zip ${{ github.workspace }}
+          zip -r ./${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}-MacOS.zip ${{ env.PROJECT_NAME }}.vst3
+          mv ${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}-MacOS.zip ${{ github.workspace }}
           cd ${{ github.workspace }}
 
       - name: Package release (Windows only)
         if: matrix.os == 'windows-latest'
         run: |
           cd ${{ env.VST3_DIR }}
-          powershell -Command "Compress-Archive -Path '${{ env.PROJECT_NAME }}.vst3' -DestinationPath '${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}.zip'"
-          move "${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}.zip" "%GITHUB_WORKSPACE%"
+          powershell -Command "Compress-Archive -Path '${{ env.PROJECT_NAME }}.vst3' -DestinationPath '${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}-Windows.zip'"
+          move "${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}-Windows.zip" "%GITHUB_WORKSPACE%"
           cd %GITHUB_WORKSPACE%
 
       - name: Create GitHub release (macOS only)
