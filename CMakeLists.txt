@@ -50,7 +50,7 @@ FetchContent_MakeAvailable(googletest)
 #
 add_subdirectory(JUCE)
 juce_add_plugin(${PROJECT_NAME}
-    COMPANY_NAME "Jake Jongewaard"
+    COMPANY_NAME "JakeJongewaard"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE
