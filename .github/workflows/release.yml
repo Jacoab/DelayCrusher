@@ -11,9 +11,11 @@ env:
   VST3_DIR: ./build/DelayCrusher_artefacts/Release/VST3
 
 jobs:
-  create-release:
-    runs-on: macos-latest
-
+  release-matrix:
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -26,16 +28,29 @@ jobs:
           repository: juce-framework/JUCE
           path: ${{ runner.workspace }}/${{ env.PROJECT_NAME }}/JUCE
 
-      - name: Install Xcode Command Line Tools
+      - name: Install Xcode Command Line Tools (macOS only)
+        if: matrix.os == 'macos-latest'
         run: xcode-select --install || true
+
+      - name: Install Windows C++ Build Tools (Windows only)
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install visualstudio2022buildtools --yes --ignore-checksums
+          choco install cmake --yes --ignore-checksums
+          choco install ninja --yes --ignore-checksums
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v1
         with:
           cmake-version: '3.24'
 
-      - name: Configure project
+      - name: Configure project (macOS)
+        if: matrix.os == 'macos-latest'
         run: cmake -B build -S . -G Xcode -DCMAKE_BUILD_TYPE=Release
+
+      - name: Configure project (Windows)
+        if: matrix.os == 'windows-latest'
+        run: cmake -B build -S . -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
 
       - name: Build project
         run: cmake --build ./build --config Release
@@ -43,14 +58,16 @@ jobs:
       - name: Run unit tests
         run: ctest --test-dir build -C Release -V
 
-      - name: Package release
+      - name: Package release (macOS only)
+        if: matrix.os == 'macos-latest'
         run: |
           cd ${{ env.VST3_DIR }}
           zip -r ./${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}.zip ${{ env.PROJECT_NAME }}.vst3
           mv ${{ env.PROJECT_NAME }}-v${{ env.PROJECT_VERSION }}.zip ${{ github.workspace }}
           cd ${{ github.workspace }}
 
-      - name: Create GitHub release
+      - name: Create GitHub release (macOS only)
+        if: matrix.os == 'macos-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
         run: >-
